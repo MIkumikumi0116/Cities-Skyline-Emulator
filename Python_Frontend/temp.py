@@ -5,10 +5,10 @@ import requests
 
 data = {
     "action": "build_road",
-    "start_x": 0.0,
-    "start_z": 0.0,
-    "end_x": 90.0,
-    "end_z": 90.0,
+    "start_x": -600,
+    "start_z": -100,
+    "end_x": 300,
+    "end_z": -100,
     "prefab_id": 101
 }
 

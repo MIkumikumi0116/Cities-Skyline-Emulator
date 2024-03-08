@@ -7,12 +7,11 @@ using ColossalFramework;
 
 namespace Emulator_Backend
 {
-    public class Build_Road{
-        const float ROAD_PITCH = 80;
-        const float temp_fixed_height = 100;
+    public class Build_Road: Action_Interface{
+        const float SEGMENT_PITCH = 80;
 
-        readonly Dictionary<Vector3, ushort> position_to_node_cache_dict = new Dictionary<Vector3, ushort>();
-
+        private readonly Dictionary<Vector3, ushort> position_to_node_cache_dict = new Dictionary<Vector3, ushort>();
+        
         public Dictionary<string, object> Perform_action(Dictionary<string, object> action_dict){
             string parameter_validity_message;
             if (!this.Check_parameter_validity(action_dict, out parameter_validity_message)){
@@ -36,7 +35,7 @@ namespace Emulator_Backend
             };
         }
 
-        bool Check_parameter_validity(Dictionary<string, object> action_dict, out string parameter_validity_message){
+        public bool Check_parameter_validity(Dictionary<string, object> action_dict, out string parameter_validity_message){
             if (
                 !action_dict.ContainsKey("start_x") ||
                 !action_dict.ContainsKey("start_z") ||
@@ -64,7 +63,7 @@ namespace Emulator_Backend
             }
 
             if ((int)action_dict["prefab_id"] < 0){
-                parameter_validity_message = "prefab_id must be a positive integer";
+                parameter_validity_message = "prefab_id must be a non-negative integer";
                 return false;
             }
 
@@ -72,18 +71,18 @@ namespace Emulator_Backend
             return true;
         }
 
-        void Make_road(float start_x, float start_z, float end_x, float end_z, uint prefab_id){
-            var start_pos = new Vector3(start_x, temp_fixed_height, start_z);
-            var end_pos   = new Vector3(end_x,   temp_fixed_height, end_z);
+        private void Make_road(float start_x, float start_z, float end_x, float end_z, uint prefab_id){
+            var start_pos = new Vector3(start_x, 0, start_z);
+            var end_pos   = new Vector3(end_x,   0, end_z);
             var delta     = end_pos - start_pos;
             var direction = delta.normalized;
             var length    = delta.magnitude;
 
             float delta_pos = 0;
-            for (; delta_pos <= length - Build_Road.ROAD_PITCH; delta_pos += Build_Road.ROAD_PITCH){
+            for (; delta_pos <= length - Build_Road.SEGMENT_PITCH; delta_pos += Build_Road.SEGMENT_PITCH){
                 this.Make_segment(
                     start_pos + direction * delta_pos,
-                    start_pos + direction * (delta_pos + Build_Road.ROAD_PITCH),
+                    start_pos + direction * (delta_pos + Build_Road.SEGMENT_PITCH),
                     prefab_id
                 );
             }
@@ -94,60 +93,25 @@ namespace Emulator_Backend
             );
         }
 
-        private Vector3 Rounding(Vector3 pos){
-            pos.x = (int)(pos.x * 100) / 100.0f;
-            pos.y = (int)(pos.y * 100) / 100.0f;
-            pos.z = (int)(pos.z * 100) / 100.0f;
-            return pos;
-        }
-
-        private ushort Get_or_make_node(Vector3 node_pos){
-            node_pos = this.Rounding(node_pos);
-
-            if (this.position_to_node_cache_dict.ContainsKey(node_pos)){
-                return this.position_to_node_cache_dict[node_pos];
-            }
-            else{
-                var net_Manager = Singleton<NetManager>.instance;
-                if (net_Manager.CreateNode(
-                    out ushort node_id,
-                    ref SimulationManager.instance.m_randomizer,
-                    PrefabCollection<NetInfo>.GetPrefab(144),
-                    node_pos,
-                    SimulationManager.instance.m_currentBuildIndex
-                )){
-                    ++SimulationManager.instance.m_currentBuildIndex;
-                    this.position_to_node_cache_dict[node_pos] = node_id;
-                    return node_id;
-                }
-                else{
-                    throw new Exception("Error creating node " + node_pos.x + ", " + node_pos.y + "at" + node_pos);
-                }
-            }
-        }
-
         private ushort Make_segment(Vector3 start_pos, Vector3 end_pos, uint prefab_id){
-            var netManager    = Singleton<NetManager>.instance;
-            var start_node_id = this.Get_or_make_node(start_pos);
-            var end_node_id   = this.Get_or_make_node(end_pos);
-            Vector3 direction = new Vector3(
-                end_pos.x - start_pos.x,
-                end_pos.y - start_pos.y,
-                end_pos.z - start_pos.z
-            ).normalized;
+            var start_node_id = this.Get_or_make_node(start_pos, out Vector3 output_start_pos, prefab_id);
+            var end_node_id   = this.Get_or_make_node(end_pos,   out Vector3 output_end_pos,   prefab_id);
+            Vector3 direction = (output_end_pos - output_start_pos).normalized;
 
-            if (netManager.CreateSegment(
-                out ushort segment_id,
-                ref SimulationManager.instance.m_randomizer,
-                PrefabCollection<NetInfo>.GetPrefab(prefab_id),
-                start_node_id,
-                end_node_id,
-                direction,
-                -direction,
-                SimulationManager.instance.m_currentBuildIndex,
-                SimulationManager.instance.m_currentBuildIndex,
-                false
-            )){
+            if (
+                Singleton<NetManager>.instance.CreateSegment(
+                    out ushort segment_id,
+                    ref Singleton<SimulationManager>.instance.m_randomizer,
+                    PrefabCollection<NetInfo>.GetPrefab(prefab_id),
+                    start_node_id,
+                    end_node_id,
+                    direction,
+                    -direction,
+                    SimulationManager.instance.m_currentBuildIndex,
+                    SimulationManager.instance.m_currentBuildIndex,
+                    false
+                )
+            ){
                 ++SimulationManager.instance.m_currentBuildIndex;
             }
             else{
@@ -156,5 +120,38 @@ namespace Emulator_Backend
 
             return segment_id;
         }
+
+        private ushort Get_or_make_node(Vector3 input_node_pos, out Vector3 output_node_pos, uint prefab_id){
+            input_node_pos.y = Singleton<TerrainManager>.instance.SampleRawHeightSmooth(new Vector3(input_node_pos.x, 0, input_node_pos.z));
+
+            input_node_pos.x = (int)(input_node_pos.x * 100) / 100.0f;
+            input_node_pos.y = (int)(input_node_pos.y * 100) / 100.0f;
+            input_node_pos.z = (int)(input_node_pos.z * 100) / 100.0f;
+
+            output_node_pos = input_node_pos;
+
+            if (this.position_to_node_cache_dict.ContainsKey(input_node_pos)){
+                return this.position_to_node_cache_dict[input_node_pos];
+            }
+            else{
+                if (
+                    Singleton<NetManager>.instance.CreateNode(
+                        out ushort node_id,
+                        ref Singleton<SimulationManager>.instance.m_randomizer,
+                        PrefabCollection<NetInfo>.GetPrefab(prefab_id),
+                        input_node_pos,
+                        SimulationManager.instance.m_currentBuildIndex
+                    )
+                ){
+                    ++SimulationManager.instance.m_currentBuildIndex;
+                    this.position_to_node_cache_dict[input_node_pos] = node_id;
+                    return node_id;
+                }
+                else{
+                    throw new Exception("Error creating node " + input_node_pos.x + ", " + input_node_pos.y + "at" + input_node_pos);
+                }
+            }
+        }
+
     }
 }
