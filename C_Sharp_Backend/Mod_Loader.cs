@@ -14,12 +14,7 @@ namespace Emulator_Backend{
 
         public override void OnLevelLoaded(LoadMode mode) {}
 
-        public override void OnReleased() {
-            var action_distributor = this.action_distributor_object.GetComponent<Action_Distributor>();
-            action_distributor.Stop();
-
-            GameObject.Destroy(this.action_distributor_object);
-        }
+        public override void OnReleased() {}
     }
 
 }

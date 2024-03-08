@@ -68,9 +68,6 @@ The backend returns the response in JSON format, with images encoded in base64. 
 | Highway Elevated | 33 |
 | Highway Slope | 123 |
 | Highway Tunnel | 124 |
-m_prefab
-name
-
 
 # Api definition
 
