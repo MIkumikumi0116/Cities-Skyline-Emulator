@@ -5,29 +5,30 @@ using ColossalFramework;
 
 
 
-namespace Emulator_Backend
-{
-    public class Build_Straight_Road : Action_Interface{
+namespace Emulator_Backend{
+
+    public class Build_Straight_Road: Action_Interface{
         const float SEGMENT_PITCH = 80;
 
         private readonly Dictionary<Vector3, ushort> position_to_node_cache_dict = new Dictionary<Vector3, ushort>();
-        
+
+        public Build_Straight_Road() { }
+
         public Dictionary<string, object> Perform_action(Dictionary<string, object> action_dict){
-            string parameter_validity_message;
-            if (!this.Check_parameter_validity(action_dict, out parameter_validity_message)){
+            if (!this.Check_parameter_validity(action_dict, out string parameter_validity_message)){
                 return new Dictionary<string, object> {
                     {"status", "error"},
                     {"message", parameter_validity_message}
                 };
             }
 
-            float start_x  = Convert.ToSingle(action_dict["start_x"]);
-            float start_z  = Convert.ToSingle(action_dict["start_z"]);
-            float end_x    = Convert.ToSingle(action_dict["end_x"]);
-            float end_z    = Convert.ToSingle(action_dict["end_z"]);
-            uint prefab_id = Convert.ToUInt32(action_dict["prefab_id"]);
+            var start_x   = Convert.ToSingle(action_dict["start_x"]);
+            var start_z   = Convert.ToSingle(action_dict["start_z"]);
+            var end_x     = Convert.ToSingle(action_dict["end_x"]);
+            var end_z     = Convert.ToSingle(action_dict["end_z"]);
+            var prefab_id = Convert.ToUInt32(action_dict["prefab_id"]);
 
-            this.Make_road(start_x, start_z, end_x, end_z, prefab_id);
+            this.Build_straight_road_perform(start_x, start_z, end_x, end_z, prefab_id);
 
             return new Dictionary<string, object> {
                 {"status", "ok"},
@@ -43,7 +44,7 @@ namespace Emulator_Backend
                 !action_dict.ContainsKey("end_z")   ||
                 !action_dict.ContainsKey("prefab_id")
             ){
-                parameter_validity_message = "missing parameters, build road takes parameters: action(string), start_x(float), start_z(float), end_x(float), end_z(float), prefab_id(int)";
+                parameter_validity_message = "missing parameters, Build_Straight_Road takes parameters: action(string), start_x(float), start_z(float), end_x(float), end_z(float), prefab_id(int)";
                 return false;
             }
 
@@ -53,7 +54,7 @@ namespace Emulator_Backend
                   (action_dict["end_x"]   is float || action_dict["end_x"]   is int) &&
                   (action_dict["end_z"]   is float || action_dict["end_z"]   is int))
             ){
-                parameter_validity_message = "parameter type mismatch, build road takes parameters: action(string), start_x(float), start_z(float), end_x(float), end_z(float), prefab_id(int)";
+                parameter_validity_message = "parameter type mismatch, Build_Straight_Road takes parameters: action(string), start_x(float), start_z(float), end_x(float), end_z(float), prefab_id(int)";
                 return false;
             }
 
@@ -71,7 +72,7 @@ namespace Emulator_Backend
             return true;
         }
 
-        private void Make_road(float start_x, float start_z, float end_x, float end_z, uint prefab_id){
+        private void Build_straight_road_perform(float start_x, float start_z, float end_x, float end_z, uint prefab_id){
             var start_pos = new Vector3(start_x, 0, start_z);
             var end_pos   = new Vector3(end_x,   0, end_z);
             var delta     = end_pos - start_pos;
@@ -152,6 +153,6 @@ namespace Emulator_Backend
                 }
             }
         }
-
     }
+
 }

@@ -13,6 +13,9 @@ namespace Emulator_Backend{
         private readonly Http_Server http_server   = new Http_Server();
         private readonly Json_Utility json_utility = new Json_Utility();
 
+        private readonly Build_Straight_Road build_straight_road_action = new Build_Straight_Road();
+        private readonly Create_Building     create_building_action     = new Create_Building();
+
         private void FixedUpdate(){
             if (!this.http_server.Try_pop_request(out HttpListenerContext http_context)){
                 return;
@@ -68,7 +71,9 @@ namespace Emulator_Backend{
 
             switch (action_string){
                 case "Build_Straight_Road":
-                    return new Build_Straight_Road().Perform_action(action_dict);
+                    return this.build_straight_road_action.Perform_action(action_dict);
+                case "Create_Building":
+                    return this.create_building_action.Perform_action(action_dict);
                 default:
                     return new Dictionary<string, object>{
                         {"status", "error"},

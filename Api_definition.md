@@ -1,11 +1,13 @@
 # Overview
-This document outlines the request and response formats, and records a mapping table of prefab IDs and their corresponding names in the game.
+This document outlines the request and response formats, mapping table of prefab IDs and corresponding names in game
 
 The frontend sends a GET request to `http://localhost:114514/`, specifying the action to be executed along with its corresponding parameters in JSON format. Every action request must include at least one parameter named "action", which specifies the action to be performed. Additional request parameters are described below.
 
 The backend returns the response in JSON format, with images encoded in base64. Every response will contain at least two parameters: "status" and "message". The "status" parameter is either "ok" or "error", and the "message" parameter contains more detailed information. In most cases of successful execution, the "message" will be "success". Additional response parameters are described below.
 
-# Prefab table
+# prefab table
+
+## Road prefab table
 | Name | Prefab ID |
 |-------|-------|
 | Gravel Road | 88 |
@@ -69,17 +71,39 @@ The backend returns the response in JSON format, with images encoded in base64. 
 | Highway Slope | 123 |
 | Highway Tunnel | 124 |
 
+## Building prefab table
+| Name | Prefab ID |
+|-------|-------|
+| Medical Clinic | 0 |
+| Hospital | 1 |
+| Fire House | 280 |
+| Fire Station | 279 |
+| Police Station | 444 |
+| Police Headquarters | 443 |
+
 # Api definition
 
 ## Build_Straight_Road
 Construct a straight road between the specified starting point and endpoint according to the style specified by prefab_id
 - request parameter
-  - action: string, "build_road"
+  - action: string, "Build_Straight_Road"
   - start_x: float, start x coordinate of the road
   - start_z: float, ~
   - end_x: float, ~
   - end_z: float, ~
-  - prefab_id: int, prefab id of road to be built (144 for example)
+  - prefab_id: int, prefab id of road to be built, check Road prefab table for detail
+- response parameter
+  - status: "ok" or "error"
+  - message: succeed: "success"; failed: error message
+
+## Create_Building
+Construct a specified building at the designated location and orientation.
+- request parameter
+  - action: string, "Create_Building"
+  - pox_x: int, x coordinate of the building
+  - pox_z: int, ~
+  - angle: float, building orientation expressed in radians
+  - prefab_id: int, prefab id of building to be built, check Building prefab table for detail
 - response parameter
   - status: "ok" or "error"
   - message: succeed: "success"; failed: error message
