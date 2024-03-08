@@ -5,11 +5,11 @@ import requests
 
 data = {
     "action": "build_road",
-    "start_x": 200.0,
-    "start_z": 100.0,
-    "end_x": 300.0,
-    "end_z": 300.0,
-    "prefab_id": 144
+    "start_x": 0.0,
+    "start_z": 0.0,
+    "end_x": 90.0,
+    "end_z": 90.0,
+    "prefab_id": 101
 }
 
 json_data = json.dumps(data)

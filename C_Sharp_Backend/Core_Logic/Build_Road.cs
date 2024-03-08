@@ -8,8 +8,8 @@ using ColossalFramework;
 namespace Emulator_Backend
 {
     public class Build_Road{
-        const float ROAD_PITCH = 100;
-        const float temp_fixed_height = 120;
+        const float ROAD_PITCH = 80;
+        const float temp_fixed_height = 100;
 
         readonly Dictionary<Vector3, ushort> position_to_node_cache_dict = new Dictionary<Vector3, ushort>();
 
