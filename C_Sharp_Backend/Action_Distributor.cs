@@ -54,8 +54,8 @@ namespace Emulator_Backend{
     public static class Json_Utility{
         public static Dictionary<string, object> Decode_json(string json_str){
             var json_dict = new Dictionary<string, object>();
-            var regex = new Regex("\"(.*?)\":\\s*(\".*?\"|-?\\d+\\.\\d+|-?\\d+)");
-            var matches = regex.Matches(json_str);
+            var regex     = new Regex("\"(.*?)\":\\s*(\".*?\"|-?\\d+\\.\\d+|-?\\d+)");
+            var matches   = regex.Matches(json_str);
             foreach (Match match in matches){
                 string key = match.Groups[1].Value;
                 string value = match.Groups[2].Value;

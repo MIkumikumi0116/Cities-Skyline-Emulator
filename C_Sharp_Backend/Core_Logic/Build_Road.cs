@@ -49,10 +49,10 @@ namespace Emulator_Backend
             }
 
             if (
-                !(action_dict["start_x"] is float &&
-                  action_dict["start_z"] is float &&
-                  action_dict["end_x"]   is float &&
-                  action_dict["end_z"]   is float)
+                !((action_dict["start_x"] is float || action_dict["start_x"] is int) &&
+                  (action_dict["start_z"] is float || action_dict["start_z"] is int) &&
+                  (action_dict["end_x"]   is float || action_dict["end_x"]   is int) &&
+                  (action_dict["end_z"]   is float || action_dict["end_z"]   is int))
             ){
                 parameter_validity_message = "parameter type mismatch, build road takes parameters: action(string), start_x(float), start_z(float), end_x(float), end_z(float), prefab_id(int)";
                 return false;
