@@ -71,7 +71,7 @@ The backend returns the response in JSON format, with images encoded in base64. 
 
 # Api definition
 
-## build road
+## Build_Straight_Road
 Construct a straight road between the specified starting point and endpoint according to the style specified by prefab_id
 - request parameter
   - action: string, "build_road"

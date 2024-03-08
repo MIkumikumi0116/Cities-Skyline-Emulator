@@ -67,8 +67,8 @@ namespace Emulator_Backend{
             }
 
             switch (action_string){
-                case "build_road":
-                    return new Build_Road().Perform_action(action_dict);
+                case "Build_Straight_Road":
+                    return new Build_Straight_Road().Perform_action(action_dict);
                 default:
                     return new Dictionary<string, object>{
                         {"status", "error"},

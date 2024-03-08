@@ -7,7 +7,7 @@ using ColossalFramework;
 
 namespace Emulator_Backend
 {
-    public class Build_Road: Action_Interface{
+    public class Build_Straight_Road : Action_Interface{
         const float SEGMENT_PITCH = 80;
 
         private readonly Dictionary<Vector3, ushort> position_to_node_cache_dict = new Dictionary<Vector3, ushort>();
@@ -79,10 +79,10 @@ namespace Emulator_Backend
             var length    = delta.magnitude;
 
             float delta_pos = 0;
-            for (; delta_pos <= length - Build_Road.SEGMENT_PITCH; delta_pos += Build_Road.SEGMENT_PITCH){
+            for (; delta_pos <= length - Build_Straight_Road.SEGMENT_PITCH; delta_pos += Build_Straight_Road.SEGMENT_PITCH){
                 this.Make_segment(
                     start_pos + direction * delta_pos,
-                    start_pos + direction * (delta_pos + Build_Road.SEGMENT_PITCH),
+                    start_pos + direction * (delta_pos + Build_Straight_Road.SEGMENT_PITCH),
                     prefab_id
                 );
             }

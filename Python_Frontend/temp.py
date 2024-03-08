@@ -4,7 +4,7 @@ import requests
 
 
 data = {
-    "action": "build_road",
+    "action": "Build_Straight_Road",
     "start_x": -600,
     "start_z": -100,
     "end_x": 300,
