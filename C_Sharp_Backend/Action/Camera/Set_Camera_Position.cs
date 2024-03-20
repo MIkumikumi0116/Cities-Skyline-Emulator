@@ -5,6 +5,6 @@ using System.Text;
 
 namespace Emulator_Backend{
 
-    class Set_Camera_Position{
+    internal class Set_Camera_Position{
     }
 }

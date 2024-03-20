@@ -12,12 +12,16 @@ import requests
 #     "prefab_id": 89
 # }
 
+# data = {
+#     "action": "Create_Building",
+#     "pos_x": 0,
+#     "pos_z": 0,
+#     "angle": 3.14,
+#     "prefab_id": 1
+# }
+
 data = {
-    "action": "Create_Building",
-    "pos_x": 0,
-    "pos_z": 0,
-    "angle": 3.14,
-    "prefab_id": 1
+    "action": "Get_Camera_Position",
 }
 
 json_data = json.dumps(data)

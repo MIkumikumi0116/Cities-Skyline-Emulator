@@ -85,16 +85,16 @@ namespace Emulator_Backend{
                     return this.create_building_action.Perform_action(action_dict);
                 case "Get_Camera_Position":
                     return this.get_camera_position_action.Perform_action(action_dict);
-                case "Get_Camera_Rotation":
-                    return this.get_camera_rotation_action.Perform_action(action_dict);
-                case "Set_Camera_Position":
-                    return this.set_camera_position_action.Perform_action(action_dict);
-                case "Set_Camera_Rotation":
-                    return this.set_camera_rotation_action.Perform_action(action_dict);
-                case "Move_Camera":
-                    return this.move_camera_action.Perform_action(action_dict);
-                case "Rotate_Camera":
-                    return this.rotate_camera_action.Perform_action(action_dict);
+                // case "Get_Camera_Rotation":
+                //     return this.get_camera_rotation_action.Perform_action(action_dict);
+                // case "Set_Camera_Position":
+                //     return this.set_camera_position_action.Perform_action(action_dict);
+                // case "Set_Camera_Rotation":
+                //     return this.set_camera_rotation_action.Perform_action(action_dict);
+                // case "Move_Camera":
+                //     return this.move_camera_action.Perform_action(action_dict);
+                // case "Rotate_Camera":
+                //     return this.rotate_camera_action.Perform_action(action_dict);
                 default:
                     return new Dictionary<string, object>{
                         {"status", "error"},
