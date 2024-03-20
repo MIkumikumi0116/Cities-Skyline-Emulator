@@ -35,7 +35,7 @@ namespace Emulator_Backend{
             this.Create_building_perform(pos_x, pos_z, angle, prefab_id);
 
             return new Dictionary<string, object> {
-                {"status", "ok"},
+                {"status",  "ok"},
                 {"message", "success"}
             };
         }

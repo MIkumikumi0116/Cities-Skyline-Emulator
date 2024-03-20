@@ -34,6 +34,10 @@ namespace Emulator_Backend{
                         if (!(action_dict[parameter_name] is int value && value >= 0))
                             parameter_validity_message += "parameter type mismatch: " + parameter_name + " is not an uint\n";
                         break;
+                    case "bool":
+                        if (!(action_dict[parameter_name] is bool))
+                            parameter_validity_message += "parameter type mismatch: " + parameter_name + " is not a bool\n";
+                        break;
                 }
             }
 

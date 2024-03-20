@@ -20,8 +20,12 @@ import requests
 #     "prefab_id": 1
 # }
 
+# data = {
+#     "action": "Get_Camera_Position",
+# }
+
 data = {
-    "action": "Get_Camera_Position",
+    "action": "Get_Camera_Rotation",
 }
 
 json_data = json.dumps(data)

@@ -25,11 +25,11 @@ namespace Emulator_Backend{
             this.Get_camera_position_perform(out float pos_x, out float pos_y, out float pos_z);
 
             return new Dictionary<string, object> {
-                {"status", "ok"},
+                {"status",  "ok"},
                 {"message", "success"},
-                {"pos_x", pos_x},
-                {"pos_y", pos_y},
-                {"pos_z", pos_z}
+                {"pos_x",    pos_x},
+                {"pos_y",    pos_y},
+                {"pos_z",    pos_z}
             };
         }
 
@@ -45,4 +45,5 @@ namespace Emulator_Backend{
             pos_z = position.z;
         }
     }
+
 }
