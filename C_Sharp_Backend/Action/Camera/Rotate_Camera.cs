@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -24,8 +25,8 @@ namespace Emulator_Backend{
                 };
             }
 
-            float rot_pitch = (float)action_dict["rot_pitch"];
-            float rot_yaw   = (float)action_dict["rot_yaw"];
+            float rot_pitch = Convert.ToSingle(action_dict["rot_pitch"]);
+            float rot_yaw   = Convert.ToSingle(action_dict["rot_yaw"]);
 
             this.Rotate_camera_perform(rot_pitch, rot_yaw);
 

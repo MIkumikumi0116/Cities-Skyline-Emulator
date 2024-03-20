@@ -30,8 +30,8 @@ import requests
 
 data = {
     "action": "Move_Camera",
-    "pos_x": 100,
-    "pos_y": 0,
+    "pos_x": 0,
+    "pos_y": 2000,
     "pos_z": 0,
     "relative_to_camera": False
 }

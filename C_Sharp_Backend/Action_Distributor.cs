@@ -4,12 +4,13 @@ using System.Text;
 using System.Threading;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 
 
 namespace Emulator_Backend{
 
-    public class Action_Distributor: UnityEngine.MonoBehaviour{
+    public class Action_Distributor: MonoBehaviour{
         private readonly Http_Server http_server   = new Http_Server();
         private readonly Json_Utility json_utility = new Json_Utility();
 
@@ -21,8 +22,6 @@ namespace Emulator_Backend{
         private readonly Set_Camera_Rotation set_camera_rotation_action = new Set_Camera_Rotation();
         private readonly Move_Camera         move_camera_action         = new Move_Camera();
         private readonly Rotate_Camera       rotate_camera_action       = new Rotate_Camera();
-
-
 
         private void FixedUpdate(){
             if (!this.http_server.Try_pop_request(out HttpListenerContext http_context)){
@@ -96,7 +95,7 @@ namespace Emulator_Backend{
                     return this.rotate_camera_action.Perform_action(action_dict);
                 default:
                     return new Dictionary<string, object>{
-                        {"status", "error"},
+                        {"status",  "error"},
                         {"message", "unknown action"}
                     };
             }
@@ -168,6 +167,7 @@ namespace Emulator_Backend{
                 else{
                     json_dict[key] = int.Parse(value);   //int
                 }
+
             }
 
             return json_dict;

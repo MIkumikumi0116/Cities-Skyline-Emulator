@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -25,9 +26,9 @@ namespace Emulator_Backend{
                 };
             }
 
-            float pos_x = (float)action_dict["pos_x"];
-            float pos_y = (float)action_dict["pos_y"];
-            float pos_z = (float)action_dict["pos_z"];
+            float pos_x = Convert.ToSingle(action_dict["pos_x"]);
+            float pos_y = Convert.ToSingle(action_dict["pos_y"]);
+            float pos_z = Convert.ToSingle(action_dict["pos_z"]);
 
             this.Set_camera_position_perform(pos_x, pos_y, pos_z);
 
