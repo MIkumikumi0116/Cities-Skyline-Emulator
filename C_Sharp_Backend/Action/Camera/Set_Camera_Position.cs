@@ -1,10 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+
 
 namespace Emulator_Backend{
 
-    class Set_Camera_Position{
+    public class Set_Camera_Position: Action_Base{
+        private CameraController controller = null;
+
+        public Set_Camera_Position() {
+            this.parameter_type_dict = new Dictionary<string, string>{
+                {"action", "string"},
+                {"pos_x",  "float"},
+                {"pos_y",  "float"},
+                {"pos_z",  "float"},
+            };
+        }
+
+        public override Dictionary<string, object> Perform_action(Dictionary<string, object> action_dict){
+            if (!this.Check_parameter_validity(action_dict, out string parameter_validity_message)){
+                return new Dictionary<string, object> {
+                    {"status", "error"},
+                    {"message", parameter_validity_message}
+                };
+            }
+
+            float pos_x = (float)action_dict["pos_x"];
+            float pos_y = (float)action_dict["pos_y"];
+            float pos_z = (float)action_dict["pos_z"];
+
+            this.Set_camera_position_perform(pos_x, pos_y, pos_z);
+
+            return new Dictionary<string, object> {
+                {"status",  "ok"},
+                {"message", "success"}
+            };
+        }
+
+        private void Set_camera_position_perform(float pos_x, float pos_y, float pos_z){
+            if (this.controller == null){
+                this.controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
+            }
+
+            var new_pos = new Vector3(pos_x, pos_y, pos_z);
+            this.controller.m_targetPosition = new_pos;
+        }
     }
+
 }

@@ -38,11 +38,11 @@ namespace Emulator_Backend{
                 this.controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
             }
 
-            var position = this.controller.m_targetPosition;
+            var pos = this.controller.m_targetPosition;
 
-            pos_x = position.x;
-            pos_y = position.y;
-            pos_z = position.z;
+            pos_x = pos.x;
+            pos_y = pos.y;
+            pos_z = pos.z;
         }
     }
 

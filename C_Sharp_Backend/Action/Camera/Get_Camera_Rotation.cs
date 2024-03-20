@@ -37,10 +37,10 @@ namespace Emulator_Backend{
                 this.controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
             }
 
-            var rotation = this.controller.m_targetAngle;
+            var rot = this.controller.m_targetAngle;
 
-            rot_pitch = rotation.x;
-            rot_yaw   = rotation.y;
+            rot_pitch = rot.x;
+            rot_yaw   = rot.y;
         }
     }
 
