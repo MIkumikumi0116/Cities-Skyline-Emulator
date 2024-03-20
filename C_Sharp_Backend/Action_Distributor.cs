@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using C_Sharp_Backend.Action.Camera;
 
 
 
@@ -15,6 +16,14 @@ namespace Emulator_Backend{
 
         private readonly Build_Straight_Road build_straight_road_action = new Build_Straight_Road();
         private readonly Create_Building     create_building_action     = new Create_Building();
+        private readonly Get_Camera_Position get_camera_position_action = new Get_Camera_Position();
+        private readonly Get_Camera_Rotation get_camera_rotation_action = new Get_Camera_Rotation();
+        private readonly Set_Camera_Position set_camera_position_action = new Set_Camera_Position();
+        private readonly Set_Camera_Rotation set_camera_rotation_action = new Set_Camera_Rotation();
+        private readonly Move_Camera         move_camera_action         = new Move_Camera();
+        private readonly Rotate_Camera       rotate_camera_action       = new Rotate_Camera();
+
+
 
         private void FixedUpdate(){
             if (!this.http_server.Try_pop_request(out HttpListenerContext http_context)){
@@ -74,6 +83,18 @@ namespace Emulator_Backend{
                     return this.build_straight_road_action.Perform_action(action_dict);
                 case "Create_Building":
                     return this.create_building_action.Perform_action(action_dict);
+                case "Get_Camera_Position":
+                    return this.get_camera_position_action.Perform_action(action_dict);
+                case "Get_Camera_Rotation":
+                    return this.get_camera_rotation_action.Perform_action(action_dict);
+                case "Set_Camera_Position":
+                    return this.set_camera_position_action.Perform_action(action_dict);
+                case "Set_Camera_Rotation":
+                    return this.set_camera_rotation_action.Perform_action(action_dict);
+                case "Move_Camera":
+                    return this.move_camera_action.Perform_action(action_dict);
+                case "Rotate_Camera":
+                    return this.rotate_camera_action.Perform_action(action_dict);
                 default:
                     return new Dictionary<string, object>{
                         {"status", "error"},
@@ -82,7 +103,7 @@ namespace Emulator_Backend{
             }
         }
     }
-    
+
     public class Http_Server{
         private const string HTTP_PREFIX = "http://localhost:11451/";
 

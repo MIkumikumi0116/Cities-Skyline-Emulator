@@ -7,14 +7,23 @@ using ColossalFramework;
 
 namespace Emulator_Backend{
 
-    public class Build_Straight_Road: Action_Interface{
+    public class Build_Straight_Road: Action_Base{
         const float SEGMENT_PITCH = 80;
 
         private readonly Dictionary<Vector3, ushort> position_to_node_cache_dict = new Dictionary<Vector3, ushort>();
 
-        public Build_Straight_Road() { }
+        public Build_Straight_Road() {
+            this.parameter_type_dict = new Dictionary<string, string>{
+                {"action",    "string"},
+                {"start_x",   "float"},
+                {"start_z",   "float"},
+                {"end_x",     "float"},
+                {"end_z",     "float"},
+                {"prefab_id", "uint"}
+            };
+        }
 
-        public Dictionary<string, object> Perform_action(Dictionary<string, object> action_dict){
+        public override Dictionary<string, object> Perform_action(Dictionary<string, object> action_dict){
             if (!this.Check_parameter_validity(action_dict, out string parameter_validity_message)){
                 return new Dictionary<string, object> {
                     {"status", "error"},
@@ -34,42 +43,6 @@ namespace Emulator_Backend{
                 {"status", "ok"},
                 {"message", "success"}
             };
-        }
-
-        public bool Check_parameter_validity(Dictionary<string, object> action_dict, out string parameter_validity_message){
-            if (
-                !action_dict.ContainsKey("start_x") ||
-                !action_dict.ContainsKey("start_z") ||
-                !action_dict.ContainsKey("end_x")   ||
-                !action_dict.ContainsKey("end_z")   ||
-                !action_dict.ContainsKey("prefab_id")
-            ){
-                parameter_validity_message = "missing parameters, Build_Straight_Road takes parameters: action(string), start_x(float), start_z(float), end_x(float), end_z(float), prefab_id(int)";
-                return false;
-            }
-
-            if (
-                !((action_dict["start_x"] is float || action_dict["start_x"] is int) &&
-                  (action_dict["start_z"] is float || action_dict["start_z"] is int) &&
-                  (action_dict["end_x"]   is float || action_dict["end_x"]   is int) &&
-                  (action_dict["end_z"]   is float || action_dict["end_z"]   is int))
-            ){
-                parameter_validity_message = "parameter type mismatch, Build_Straight_Road takes parameters: action(string), start_x(float), start_z(float), end_x(float), end_z(float), prefab_id(int)";
-                return false;
-            }
-
-            if (!(action_dict["prefab_id"] is int)){
-                parameter_validity_message = "prefab_id must be an integer";
-                return false;
-            }
-
-            if ((int)action_dict["prefab_id"] < 0){
-                parameter_validity_message = "prefab_id must be a non-negative integer";
-                return false;
-            }
-
-            parameter_validity_message = "";
-            return true;
         }
 
         private void Build_straight_road_perform(float start_x, float start_z, float end_x, float end_z, uint prefab_id){

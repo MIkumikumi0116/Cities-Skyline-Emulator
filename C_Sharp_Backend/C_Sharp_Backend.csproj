@@ -51,10 +51,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Action\Action_Interface.cs" />
-    <Compile Include="Action\Create_Building.cs" />
+    <Compile Include="Action\Action_Base.cs" />
+    <Compile Include="Action\Building\Create_Building.cs" />
+    <Compile Include="Action\Camera\Move_Camera.cs" />
+    <Compile Include="Action\Camera\Rotate_Camera.cs" />
+    <Compile Include="Action\Camera\Set_Camera_Rotation.cs" />
+    <Compile Include="Action\Camera\Get_Camera_Position.cs" />
+    <Compile Include="Action\Camera\Get_Camera_Rotation.cs" />
+    <Compile Include="Action\Camera\Set_Camera_Position.cs" />
     <Compile Include="Action_Distributor.cs" />
-    <Compile Include="Action\Build_Straight_Road.cs" />
+    <Compile Include="Action\Building\Build_Straight_Road.cs" />
     <Compile Include="Emulator_Backend.cs" />
     <Compile Include="Mod_Loader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
