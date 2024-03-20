@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using C_Sharp_Backend.Action.Camera;
 
 
 
@@ -148,13 +147,19 @@ namespace Emulator_Backend{
     public class Json_Utility{
         public Dictionary<string, object> Decode_json(string json_str){
             var json_dict = new Dictionary<string, object>();
-            var regex     = new Regex("\"(.*?)\":\\s*(\".*?\"|-?\\d+\\.\\d+|-?\\d+)");
+            var regex     = new Regex("\"(.*?)\":\\s*(\".*?\"|-?\\d+\\.\\d+|-?\\d+|true|false)");
             var matches   = regex.Matches(json_str);
             foreach (Match match in matches){
                 string key   = match.Groups[1].Value;
                 string value = match.Groups[2].Value;
 
-                if (value.StartsWith("\"")){
+                if (value == "true"){
+                    json_dict[key] = true;               //bool
+                }
+                else if (value == "false"){
+                    json_dict[key] = false;              //bool
+                }
+                else if (value.StartsWith("\"")){
                     json_dict[key] = value.Trim('"');    //string
                 }
                 else if (value.Contains(".")){
@@ -177,12 +182,14 @@ namespace Emulator_Backend{
                 object value = key_value.Value;
 
                 json_str.Append($"\"{key}\":");
+
                 if (value is string value_str){
                     json_str.Append($"\"{this.Escape_string(value_str)}\"");
                 }
                 else{
                     json_str.Append(value);
                 }
+
                 json_str.Append(", ");
             }
 

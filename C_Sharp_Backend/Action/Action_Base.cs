@@ -23,11 +23,11 @@ namespace Emulator_Backend{
 
                 switch (parameter_type){
                     case "int":
-                        if (!(action_dict[parameter_name] is float || action_dict[parameter_name] is int))
+                        if (!(action_dict[parameter_name] is int))
                             parameter_validity_message += "parameter type mismatch: " + parameter_name + " is not an int\n";
                         break;
                     case "float":
-                        if (!(action_dict[parameter_name] is float))
+                        if (!(action_dict[parameter_name] is float || action_dict[parameter_name] is int))
                             parameter_validity_message += "parameter type mismatch: " + parameter_name + " is not a float\n";
                         break;
                     case "uint":
