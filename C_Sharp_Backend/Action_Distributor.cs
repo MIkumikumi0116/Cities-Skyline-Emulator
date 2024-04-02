@@ -14,14 +14,30 @@ namespace Emulator_Backend{
         private readonly Http_Server http_server   = new Http_Server();
         private readonly Json_Utility json_utility = new Json_Utility();
 
+        // Building
         private readonly Build_Straight_Road build_straight_road_action = new Build_Straight_Road();
         private readonly Create_Building     create_building_action     = new Create_Building();
+
+        // Camera
         private readonly Get_Camera_Position get_camera_position_action = new Get_Camera_Position();
         private readonly Get_Camera_Rotation get_camera_rotation_action = new Get_Camera_Rotation();
         private readonly Set_Camera_Position set_camera_position_action = new Set_Camera_Position();
         private readonly Set_Camera_Rotation set_camera_rotation_action = new Set_Camera_Rotation();
         private readonly Move_Camera         move_camera_action         = new Move_Camera();
         private readonly Rotate_Camera       rotate_camera_action       = new Rotate_Camera();
+
+        // Setting
+        private readonly Set_Edge_Scrolling_Option set_edge_scrolling_option_action = new Set_Edge_Scrolling_Option();
+
+        private void Start()
+        {
+            // Disable the edge scrolling option, for convenient operate throught Python Frontend. (Execution is delay by 25000ms)
+            this.set_edge_scrolling_option_action.Perform_action_delay(new Dictionary<string, object>()
+            {
+                {"action", "Set_Edge_Scrolling_Option" },
+                {"is_enable", false },
+            }, 25000); // This function should be executed when the game is **fully** loaded.
+        }
 
         private void FixedUpdate(){
             if (!this.http_server.Try_pop_request(out HttpListenerContext http_context)){
@@ -77,10 +93,13 @@ namespace Emulator_Backend{
             }
 
             switch (action_string){
+                // Building
                 case "Build_Straight_Road":
                     return this.build_straight_road_action.Perform_action(action_dict);
                 case "Create_Building":
                     return this.create_building_action.Perform_action(action_dict);
+
+                // Camera
                 case "Get_Camera_Position":
                     return this.get_camera_position_action.Perform_action(action_dict);
                 case "Get_Camera_Rotation":
@@ -93,6 +112,12 @@ namespace Emulator_Backend{
                     return this.move_camera_action.Perform_action(action_dict);
                 case "Rotate_Camera":
                     return this.rotate_camera_action.Perform_action(action_dict);
+
+                // Setting
+                case "Set_Edge_Scrolling_Option":
+                    return this.set_edge_scrolling_option_action.Perform_action(action_dict);
+
+                // Default
                 default:
                     return new Dictionary<string, object>{
                         {"status",  "error"},

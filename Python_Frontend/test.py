@@ -28,13 +28,13 @@ import requests
 #     "action": "Get_Camera_Rotation"
 # }
 
-data = {
-    "action": "Move_Camera",
-    "pos_x": 0,
-    "pos_y": 2000,
-    "pos_z": 0,
-    "relative_to_camera": False
-}
+# data = {
+#     "action": "Move_Camera",
+#     "pos_x": 0,
+#     "pos_y": 2000,
+#     "pos_z": 0,
+#     "relative_to_camera": False
+# }
 
 # data = {
 #     "action": "Move_Camera",
@@ -63,6 +63,12 @@ data = {
 #     "rot_yaw": 0
 # }
 
+# === Settings ===
+
+data = {
+    "action": "Set_Edge_Scrolling_Option",
+    "is_enable": False,
+}
 
 
 json_data = json.dumps(data)
