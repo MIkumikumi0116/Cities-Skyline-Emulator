@@ -45,6 +45,7 @@ namespace Emulator_Backend{
 
             var new_pos = new Vector3(pos_x, pos_y, pos_z);
             this.controller.m_targetPosition = new_pos;
+            this.controller.m_targetSize = pos_y; // [40, 4000] 
         }
     }
 
