@@ -11,7 +11,7 @@ using UnityEngine;
 namespace Emulator_Backend{
 
     public class Action_Distributor: MonoBehaviour{
-        private readonly Http_Server http_server   = new Http_Server();
+        private Http_Server http_server;
         private readonly Json_Utility json_utility = new Json_Utility();
 
         // Building
@@ -29,14 +29,20 @@ namespace Emulator_Backend{
         // Setting
         private readonly Set_Edge_Scrolling_Option set_edge_scrolling_option_action = new Set_Edge_Scrolling_Option();
 
-        private void Start()
-        {
+        private void OnEnable() {
+            // Create Http Server
+            this.http_server = new Http_Server();
+
             // Disable the edge scrolling option, for convenient operate throught Python Frontend. (Execution is delay by 25000ms)
             this.set_edge_scrolling_option_action.Perform_action_delay(new Dictionary<string, object>()
             {
                 {"action", "Set_Edge_Scrolling_Option" },
                 {"is_enable", false },
             }, 25000); // This function should be executed when the game is **fully** loaded.
+        }
+
+        private void OnDisable() {
+            this.http_server.On_Disable();
         }
 
         private void FixedUpdate(){
@@ -78,6 +84,8 @@ namespace Emulator_Backend{
         }
 
         private Dictionary<string, object> Dispatch_action(Dictionary<string, object> action_dict){
+            Debug.Log("Received an action.");
+
             if (!action_dict.ContainsKey("action")){
                 return new Dictionary<string, object>{
                     {"status", "error"},
@@ -142,6 +150,12 @@ namespace Emulator_Backend{
 
             this.http_listener_thread = new Thread(this.Monitoring_request);
             this.http_listener_thread.Start();
+        }
+
+        public void On_Disable() {
+            // this.is_running = false; // A better way to stop a thread
+            this.http_listener_thread.Abort(); // But http_listener.GetContext() is a blocking method, so we need to stop the thread by force.
+            this.http_listener.Stop();
         }
 
         private void Monitoring_request(){
