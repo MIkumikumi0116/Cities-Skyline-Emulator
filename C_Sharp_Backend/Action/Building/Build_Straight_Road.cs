@@ -53,7 +53,7 @@ namespace Emulator_Backend{
             var length    = delta.magnitude;
 
             float delta_pos = 0;
-            for (; delta_pos <= length - Build_Straight_Road.SEGMENT_PITCH; delta_pos += Build_Straight_Road.SEGMENT_PITCH){
+            for (; delta_pos < length - Build_Straight_Road.SEGMENT_PITCH; delta_pos += Build_Straight_Road.SEGMENT_PITCH){
                 this.Make_segment(
                     start_pos + direction * delta_pos,
                     start_pos + direction * (delta_pos + Build_Straight_Road.SEGMENT_PITCH),
