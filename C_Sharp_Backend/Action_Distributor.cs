@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -5,7 +6,7 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
-
+using ColossalFramework;
 
 
 namespace Emulator_Backend{
@@ -39,10 +40,16 @@ namespace Emulator_Backend{
                 {"action", "Set_Edge_Scrolling_Option" },
                 {"is_enable", false },
             }, 25000); // This function should be executed when the game is **fully** loaded.
+
+            // Components Enable List
+            build_straight_road_action.On_Enable();
         }
 
         private void OnDisable() {
             this.http_server.On_Disable();
+
+            // Components Enable List
+            // TODO: build_straight_road_action.On_Disable();
         }
 
         private void FixedUpdate(){
