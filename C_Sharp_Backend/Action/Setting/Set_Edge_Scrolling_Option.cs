@@ -1,77 +1,45 @@
-﻿using ColossalFramework.UI;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using System.Threading;
-using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.Assertions;
+using System.Collections.Generic;
+using ColossalFramework.UI;
 
 
 
-namespace Emulator_Backend
-{
-    public class Set_Edge_Scrolling_Option : Action_Base
-    {
-        private OptionsGameplayPanel panel;
+namespace Emulator_Backend{
 
-        public Set_Edge_Scrolling_Option()
-        {
-            this.parameter_type_dict = new Dictionary<string, string>
-            {
+    public class Set_Edge_Scrolling_Option: Action_Base{
+        private OptionsGameplayPanel panel = null;
+
+        public Set_Edge_Scrolling_Option(){
+            this.parameter_type_dict = new Dictionary<string, string>(){
                 {"action", "string"},
                 {"is_enable", "bool"},
             };
         }
 
-        public override Dictionary<string, object> Perform_action(Dictionary<string, object> action_dict)
-        {
-            if (!this.Check_parameter_validity(action_dict, out string parameter_validity_message))
-            {
-                return new Dictionary<string, object> {
-                    {"status", "error"},
-                    {"message", parameter_validity_message}
-                };
-            }
-
-            var is_enable = Convert.ToBoolean(action_dict["is_enable"]);
-
-            this.Set_edge_scrolling_option_perform(is_enable);
-
+        public override Dictionary<string, object> Perform_action(Dictionary<string, object> action_param_dict){
             return new Dictionary<string, object> {
-                {"status",  "ok"},
-                {"message", "success"}
+                {"status", "error"},
+                {"message", "Set_Edge_Scrolling_Option should not be called directly"}
             };
         }
 
-        // Be careful, this delay function has no return value.
-        // Parameter `time` is in millisecond.
-        public void On_Enable()
-        {
-            var action_dict = new Dictionary<string, object>(){
-                {"action", "Set_Edge_Scrolling_Option"},
-                {"is_enable", false },
-            };
-            int time = 25000;
+        public override void On_enable(){
+            int time = 25000; //milliseconds
 
-
-            Timer timer = new Timer(Perform_action_delay_callback, action_dict, time, Timeout.Infinite);
+            Timer timer = new Timer(this.On_enable_callback, false, time, Timeout.Infinite);
         }
 
-        private void Perform_action_delay_callback(object state)
-        {
-            this.Perform_action((Dictionary<string, object>)(state));
-        }
+        private void On_enable_callback(object is_enable){
+            var is_enable_flag = Convert.ToBoolean(is_enable);
 
-        private void Set_edge_scrolling_option_perform(bool is_enable)
-        {
-            if (this.panel == null)
-            {
+            if (this.panel == null){
                 var options_main_panel = UIView.library.Get<OptionsMainPanel>("OptionsPanel");
                 this.panel = options_main_panel.GetComponentInChildren<OptionsGameplayPanel>();
             }
-            this.panel.edgeScrolling = is_enable;
-        }
 
+            this.panel.edgeScrolling = is_enable_flag;
+        }
     }
+
 }

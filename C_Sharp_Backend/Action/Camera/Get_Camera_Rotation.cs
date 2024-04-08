@@ -14,8 +14,8 @@ namespace Emulator_Backend{
             };
         }
 
-        public override Dictionary<string, object> Perform_action(Dictionary<string, object> action_dict){
-            if (!this.Check_parameter_validity(action_dict, out string parameter_validity_message)){
+        public override Dictionary<string, object> Perform_action(Dictionary<string, object> action_param_dict){
+            if (!this.Check_parameter_validity(action_param_dict, out string parameter_validity_message)){
                 return new Dictionary<string, object> {
                     {"status", "error"},
                     {"message", parameter_validity_message}

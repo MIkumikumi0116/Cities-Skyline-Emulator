@@ -18,17 +18,17 @@ namespace Emulator_Backend{
             };
         }
 
-        public override Dictionary<string, object> Perform_action(Dictionary<string, object> action_dict){
-            if (!this.Check_parameter_validity(action_dict, out string parameter_validity_message)){
+        public override Dictionary<string, object> Perform_action(Dictionary<string, object> action_param_dict){
+            if (!this.Check_parameter_validity(action_param_dict, out string parameter_validity_message)){
                 return new Dictionary<string, object> {
                     {"status", "error"},
                     {"message", parameter_validity_message}
                 };
             }
 
-            float pos_x = Convert.ToSingle(action_dict["pos_x"]);
-            float pos_y = Convert.ToSingle(action_dict["pos_y"]);
-            float pos_z = Convert.ToSingle(action_dict["pos_z"]);
+            float pos_x = Convert.ToSingle(action_param_dict["pos_x"]);
+            float pos_y = Convert.ToSingle(action_param_dict["pos_y"]);
+            float pos_z = Convert.ToSingle(action_param_dict["pos_z"]);
 
             this.Set_camera_position_perform(pos_x, pos_y, pos_z);
 
@@ -45,7 +45,6 @@ namespace Emulator_Backend{
 
             var new_pos = new Vector3(pos_x, pos_y, pos_z);
             this.controller.m_targetPosition = new_pos;
-            this.controller.m_targetSize = pos_y; // [40, 4000] 
         }
     }
 

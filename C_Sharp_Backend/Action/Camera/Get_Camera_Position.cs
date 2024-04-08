@@ -14,8 +14,8 @@ namespace Emulator_Backend{
             };
         }
 
-        public override Dictionary<string, object> Perform_action(Dictionary<string, object> action_dict){
-            if (!this.Check_parameter_validity(action_dict, out string parameter_validity_message)){
+        public override Dictionary<string, object> Perform_action(Dictionary<string, object> action_param_dict){
+            if (!this.Check_parameter_validity(action_param_dict, out string parameter_validity_message)){
                 return new Dictionary<string, object> {
                     {"status", "error"},
                     {"message", parameter_validity_message}
@@ -39,16 +39,10 @@ namespace Emulator_Backend{
             }
 
             var pos = this.controller.m_targetPosition;
-            
+
             pos_x = pos.x;
             pos_y = pos.y;
             pos_z = pos.z;
-
-            //var height = this.controller.m_currentHeight;
-            //var cur_pos = this.controller.m_currentPosition;
-            //var transform = this.controller.transform;
-            //var target_size = this.controller.m_targetSize;
-            //Debug.Log("current_height: " + height.ToString() + "; " + "current_position: " + cur_pos.ToString() + "; " + "current_transform: " + transform.position.ToString() + "; " + "target_size: " + target_size);
         }
     }
 

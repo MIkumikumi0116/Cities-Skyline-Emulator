@@ -11,7 +11,7 @@ using UnityEngine;
 namespace Emulator_Backend{
 
     public class Action_Distributor: MonoBehaviour{
-        private readonly Http_Server http_server   = new Http_Server();
+        private Http_Server http_server;
         private readonly Json_Utility json_utility = new Json_Utility();
 
         private readonly Dictionary<string, Action_Base> action_dict = new Dictionary<string, Action_Base>();
@@ -42,6 +42,8 @@ namespace Emulator_Backend{
             foreach (var action in this.action_list){
                 action.On_enable();
             }
+
+            this.http_server = new Http_Server();
         }
 
         private void OnDisable() {

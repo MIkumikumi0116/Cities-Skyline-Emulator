@@ -1,18 +1,17 @@
-﻿using JetBrains.Annotations;
-using System;
-using UnityEngine;
+﻿using System;
+
+
 
 namespace Emulator_Backend {
 
-    // 自定义 Pair 类表示一对值
-    public class Pair<TFirst, TSecond>
-        where TFirst : IEquatable<TFirst>
-        where TSecond : IEquatable<TSecond> {
-        public TFirst First { get; set; }
+    public class Pair<TFirst, TSecond> // 自定义 Pair 类表示一对值
+    where TFirst : IEquatable<TFirst>
+    where TSecond: IEquatable<TSecond> {
+        public TFirst First   { get; set; }
         public TSecond Second { get; set; }
 
         public Pair(TFirst first, TSecond second) {
-            First = first;
+            First  = first;
             Second = second;
         }
 
@@ -27,23 +26,19 @@ namespace Emulator_Backend {
         }
 
         public override int GetHashCode() {
-            unchecked // 使用 unchecked 防止溢出，这在计算哈希码时是常见的
-            {
+            unchecked{ // 使用 unchecked 防止溢出，这在计算哈希码时是常见的
                 int hash = 17;
-                hash = hash * 31 + (First != null ? First.GetHashCode() : 0);
+                hash = hash * 31 + (First  != null ? First.GetHashCode()  : 0);
                 hash = hash * 31 + (Second != null ? Second.GetHashCode() : 0);
                 return hash;
             }
         }
 
-        public static Pair<TFirst, TSecond> MakePair(TFirst first, TSecond second) {
-            return new Pair<TFirst, TSecond>(first, second);
-        }
-
-        public static Pair<ushort, ushort> MakeSortedPair(ushort first, ushort second) {
+        public static Pair<ushort, ushort> Make_sorted_pair(ushort first, ushort second) {
             if (first > second) {
-                Util.swap(ref first, ref second);
+                Util.Swap(ref first, ref second);
             }
+
             return new Pair<ushort, ushort>(first, second);
         }
     }
