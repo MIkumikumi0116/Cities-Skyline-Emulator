@@ -59,6 +59,7 @@ namespace Emulator_Backend{
             }
 
             this.controller.m_targetPosition = new_pos;
+            this.controller.m_targetSize = new_pos.y;
         }
     }
 
