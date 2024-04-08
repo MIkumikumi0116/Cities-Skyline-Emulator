@@ -46,8 +46,15 @@ namespace Emulator_Backend
 
         // Be careful, this delay function has no return value.
         // Parameter `time` is in millisecond.
-        public void Perform_action_delay(Dictionary<string, object> action_dict, int time)
+        public void On_Enable()
         {
+            var action_dict = new Dictionary<string, object>(){
+                {"action", "Set_Edge_Scrolling_Option"},
+                {"is_enable", false },
+            };
+            int time = 25000;
+
+
             Timer timer = new Timer(Perform_action_delay_callback, action_dict, time, Timeout.Infinite);
         }
 

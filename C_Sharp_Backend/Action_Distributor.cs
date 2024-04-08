@@ -11,132 +11,112 @@ using UnityEngine;
 namespace Emulator_Backend{
 
     public class Action_Distributor: MonoBehaviour{
-        private Http_Server http_server = new Http_Server();
+        private readonly Http_Server http_server   = new Http_Server();
         private readonly Json_Utility json_utility = new Json_Utility();
 
-        // Building
-        private readonly Build_Straight_Road build_straight_road_action = new Build_Straight_Road();
-        private readonly Create_Building     create_building_action     = new Create_Building();
+        private readonly Dictionary<string, Action_Base> action_dict = new Dictionary<string, Action_Base>();
+        private readonly List<Action_Base> action_list               = new List<Action_Base>(){
+            // Building
+            new Build_Straight_Road(),
+            new Create_Building(),
 
-        // Camera
-        private readonly Get_Camera_Position get_camera_position_action = new Get_Camera_Position();
-        private readonly Get_Camera_Rotation get_camera_rotation_action = new Get_Camera_Rotation();
-        private readonly Set_Camera_Position set_camera_position_action = new Set_Camera_Position();
-        private readonly Set_Camera_Rotation set_camera_rotation_action = new Set_Camera_Rotation();
-        private readonly Move_Camera         move_camera_action         = new Move_Camera();
-        private readonly Rotate_Camera       rotate_camera_action       = new Rotate_Camera();
+            // Camera
+            new Get_Camera_Position(),
+            new Get_Camera_Rotation(),
+            new Set_Camera_Position(),
+            new Set_Camera_Rotation(),
+            new Move_Camera(),
+            new Rotate_Camera(),
 
-        // Setting
-        private readonly Set_Edge_Scrolling_Option set_edge_scrolling_option_action = new Set_Edge_Scrolling_Option();
+            // Setting
+            new Set_Edge_Scrolling_Option()
+        };
+
+        public Action_Distributor(){
+            foreach (var action in this.action_list){
+                this.action_dict[action.GetType().Name] = action;
+            }
+        }
 
         private void OnEnable() {
-            // Disable the edge scrolling option, for convenient operate through Python Frontend. (Execution is delay by 25000ms)
-            this.set_edge_scrolling_option_action.Perform_action_delay(
-                new Dictionary<string, object>(){
-                    {"action", "Set_Edge_Scrolling_Option"},
-                    {"is_enable", false },
-                },
-                25000
-            ); // This function should be executed when the game is **fully** loaded.
-
-            // Components Enable List
-            build_straight_road_action.On_Enable();
+            foreach (var action in this.action_list){
+                action.On_enable();
+            }
         }
 
         private void OnDisable() {
-            this.http_server.On_Disable();
+            foreach (var action in this.action_list){
+                action.On_disable();
+            }
 
-            // Components Enable List
-            // TODO: build_straight_road_action.On_Disable();
+            this.http_server.On_Disable();
         }
 
         private void FixedUpdate(){
-            if (!this.http_server.Try_pop_request(out HttpListenerContext http_context)){
-                return;
-            }
+            while (true){ // process all pending requests
+                if (!this.http_server.Try_pop_request(out HttpListenerContext http_context)){
+                    return;
+                }
 
-            string request_str;
-            using (StreamReader stream_reader = new StreamReader(http_context.Request.InputStream, http_context.Request.ContentEncoding)){
-                request_str = stream_reader.ReadToEnd();
-            }
+                string request_str;
+                using (StreamReader stream_reader = new StreamReader(http_context.Request.InputStream, http_context.Request.ContentEncoding)){
+                    request_str = stream_reader.ReadToEnd();
+                }
 
-            Dictionary<string, object> request_dict  = null;
-            Dictionary<string, object> response_dict = null;
-            try{
-                request_dict = this.json_utility.Decode_json(request_str);
-            }
-            catch (System.Exception){
-                response_dict = new Dictionary<string, object>{
-                    {"status",  "error"},
-                    {"message", "Invalid JSON format"}
-                };
-            }
+                Dictionary<string, object> request_dict  = null;
+                Dictionary<string, object> response_dict = null;
+                try{
+                    request_dict = this.json_utility.Decode_json(request_str);
+                }
+                catch (System.Exception){
+                    response_dict = new Dictionary<string, object>{
+                        {"status",  "error"},
+                        {"message", "Invalid JSON format"}
+                    };
+                }
 
-            if (response_dict == null){
-                response_dict = this.Dispatch_action(request_dict);
+                if (response_dict == null){
+                    response_dict = this.Dispatch_action(request_dict);
+                }
+
+                http_context.Response.ContentType     = "application/json";
+                http_context.Response.ContentEncoding = Encoding.UTF8;
+                http_context.Response.StatusCode      = 200;
+
+                using (Stream output_stream = http_context.Response.OutputStream)
+                using (StreamWriter stream_writer = new StreamWriter(output_stream, http_context.Response.ContentEncoding)){
+                    stream_writer.Write(this.json_utility.Encode_json(response_dict));
+                }
+
+                http_context.Response.Close();
             }
-
-            http_context.Response.ContentType     = "application/json";
-            http_context.Response.ContentEncoding = Encoding.UTF8;
-            http_context.Response.StatusCode      = 200;
-
-            using (Stream output_stream = http_context.Response.OutputStream)
-            using (StreamWriter stream_writer = new StreamWriter(output_stream, http_context.Response.ContentEncoding)){
-                stream_writer.Write(this.json_utility.Encode_json(response_dict));
-            }
-
-            http_context.Response.Close();
         }
 
-        private Dictionary<string, object> Dispatch_action(Dictionary<string, object> action_dict){
-            Debug.Log("Received an action.");
-
-            if (!action_dict.ContainsKey("action")){
+        private Dictionary<string, object> Dispatch_action(Dictionary<string, object> action_param_dict){
+            if (!action_param_dict.ContainsKey("action")){
                 return new Dictionary<string, object>{
                     {"status", "error"},
                     {"message", "no action specified"}
                 };
             }
 
-            if (!(action_dict["action"] is string action_string)){
+            if (!(action_param_dict["action"] is string action_string)){
                 return new Dictionary<string, object>{
                     {"status", "error"},
                     {"message", "action should be a string"}
                 };
             }
 
-            switch (action_string){
-                // Building
-                case "Build_Straight_Road":
-                    return this.build_straight_road_action.Perform_action(action_dict);
-                case "Create_Building":
-                    return this.create_building_action.Perform_action(action_dict);
-
-                // Camera
-                case "Get_Camera_Position":
-                    return this.get_camera_position_action.Perform_action(action_dict);
-                case "Get_Camera_Rotation":
-                    return this.get_camera_rotation_action.Perform_action(action_dict);
-                case "Set_Camera_Position":
-                    return this.set_camera_position_action.Perform_action(action_dict);
-                case "Set_Camera_Rotation":
-                    return this.set_camera_rotation_action.Perform_action(action_dict);
-                case "Move_Camera":
-                    return this.move_camera_action.Perform_action(action_dict);
-                case "Rotate_Camera":
-                    return this.rotate_camera_action.Perform_action(action_dict);
-
-                // Setting
-                case "Set_Edge_Scrolling_Option":
-                    return this.set_edge_scrolling_option_action.Perform_action(action_dict);
-
-                // Default
-                default:
-                    return new Dictionary<string, object>{
-                        {"status",  "error"},
-                        {"message", "unknown action"}
-                    };
+            if (!this.action_dict.ContainsKey(action_string)){
+                return new Dictionary<string, object>{
+                    {"status", "error"},
+                    {"message", "unknown action"}
+                };
             }
+
+            var response_dict = this.action_dict[action_string].Perform_action(action_param_dict);
+
+            return response_dict;
         }
     }
 

@@ -54,7 +54,7 @@ namespace Emulator_Backend {
                 var start = Singleton<NetManager>.instance.m_segments.m_buffer[i].m_startNode;
                 var end = Singleton<NetManager>.instance.m_segments.m_buffer[i].m_endNode;
                 if ((nodes[start] - nodes[end]).magnitude > Build_Segment_Base.SEGMENT_PITCH_LOAD_MAX) continue;
-                
+
                 var two_node = Pair<ushort, ushort>.MakeSortedPair(start, end);
                 segments.Add(i, two_node);
                 two_node_to_segment[two_node] = i;
@@ -107,7 +107,7 @@ namespace Emulator_Backend {
             );
         }
 
-        
+
 
         private void Make_segments(Vector3 start, Vector3 end, uint prefab_id) {
 

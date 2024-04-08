@@ -43,6 +43,10 @@ namespace Emulator_Backend{
 
             return string.IsNullOrEmpty(parameter_validity_message);
         }
+
+        public virtual void On_enable(){}
+
+        public virtual void On_disable(){}
     }
 
 }
