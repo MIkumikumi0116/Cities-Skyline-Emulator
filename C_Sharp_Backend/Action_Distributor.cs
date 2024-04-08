@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -6,13 +5,13 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using ColossalFramework;
+
 
 
 namespace Emulator_Backend{
 
     public class Action_Distributor: MonoBehaviour{
-        private Http_Server http_server;
+        private Http_Server http_server = new Http_Server();
         private readonly Json_Utility json_utility = new Json_Utility();
 
         // Building
@@ -31,15 +30,14 @@ namespace Emulator_Backend{
         private readonly Set_Edge_Scrolling_Option set_edge_scrolling_option_action = new Set_Edge_Scrolling_Option();
 
         private void OnEnable() {
-            // Create Http Server
-            this.http_server = new Http_Server();
-
-            // Disable the edge scrolling option, for convenient operate throught Python Frontend. (Execution is delay by 25000ms)
-            this.set_edge_scrolling_option_action.Perform_action_delay(new Dictionary<string, object>()
-            {
-                {"action", "Set_Edge_Scrolling_Option" },
-                {"is_enable", false },
-            }, 25000); // This function should be executed when the game is **fully** loaded.
+            // Disable the edge scrolling option, for convenient operate through Python Frontend. (Execution is delay by 25000ms)
+            this.set_edge_scrolling_option_action.Perform_action_delay(
+                new Dictionary<string, object>(){
+                    {"action", "Set_Edge_Scrolling_Option"},
+                    {"is_enable", false },
+                },
+                25000
+            ); // This function should be executed when the game is **fully** loaded.
 
             // Components Enable List
             build_straight_road_action.On_Enable();
@@ -160,8 +158,7 @@ namespace Emulator_Backend{
         }
 
         public void On_Disable() {
-            // this.is_running = false; // A better way to stop a thread
-            this.http_listener_thread.Abort(); // But http_listener.GetContext() is a blocking method, so we need to stop the thread by force.
+            this.http_listener_thread.Abort();
             this.http_listener.Stop();
         }
 

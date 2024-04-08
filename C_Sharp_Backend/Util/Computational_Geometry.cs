@@ -98,7 +98,7 @@ namespace Emulator_Backend {
         public float abs2() { // sqrMagnitude
             return x * x + y * y;
         }
-        
+
         public static float cross(Point p1, Point p2, Point p3) { // cross product in 2D space
             return (p2.x - p1.x) * (p3.y - p1.y) - (p3.x - p1.x) * (p2.y - p1.y);
         }

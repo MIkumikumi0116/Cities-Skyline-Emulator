@@ -32,16 +32,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>.\Assembly-CSharp.dll</HintPath>
+      <HintPath>$(CITIES_SKYLINE_PATH)\Cities_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="ColossalManaged">
-      <HintPath>.\ColossalManaged.dll</HintPath>
+      <HintPath>$(CITIES_SKYLINE_PATH)\Cities_Data\Managed\ColossalManaged.dll</HintPath>
     </Reference>
     <Reference Include="ICities">
-      <HintPath>.\ICities.dll</HintPath>
+      <HintPath>$(CITIES_SKYLINE_PATH)\Cities_Data\Managed\ICities.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>.\UnityEngine.dll</HintPath>
+      <HintPath>$(CITIES_SKYLINE_PATH)\Cities_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -51,21 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Action\Action_Base.cs" />
-    <Compile Include="Action\Building\Create_Building.cs" />
-    <Compile Include="Action\Camera\Move_Camera.cs" />
-    <Compile Include="Action\Camera\Rotate_Camera.cs" />
-    <Compile Include="Action\Camera\Set_Camera_Rotation.cs" />
-    <Compile Include="Action\Camera\Get_Camera_Position.cs" />
-    <Compile Include="Action\Camera\Get_Camera_Rotation.cs" />
-    <Compile Include="Action\Camera\Set_Camera_Position.cs" />
-    <Compile Include="Action_Distributor.cs" />
-    <Compile Include="Action\Building\Build_Straight_Road.cs" />
-    <Compile Include="Emulator_Backend.cs" />
-    <Compile Include="Mod_Loader.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="**\*.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>mkdir "%25LOCALAPPDATA%25\Colossal Order\Cities_Skylines\Addons\Mods\$(SolutionName)"
