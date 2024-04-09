@@ -7,7 +7,7 @@ The backend returns the response in JSON format, with images encoded in base64. 
 
 # prefab table
 
-## Road prefab table
+## Road Prefab Table
 | Name | Prefab ID |
 |-------|-------|
 | Gravel Road | 88 |
@@ -71,7 +71,7 @@ The backend returns the response in JSON format, with images encoded in base64. 
 | Highway Slope | 123 |
 | Highway Tunnel | 124 |
 
-## Building prefab table
+## Building Prefab Table
 | Name | Prefab ID |
 |-------|-------|
 | Medical Clinic | 0 |
@@ -83,27 +83,95 @@ The backend returns the response in JSON format, with images encoded in base64. 
 
 # Api definition
 
-## Build_Straight_Road
+## Building
+
+### Build_Straight_Road
 Construct a straight road between the specified starting point and endpoint according to the style specified by prefab_id
 - request parameter
   - action: string, "Build_Straight_Road"
   - start_x: float, start x coordinate of the road
-  - start_z: float, ~
-  - end_x: float, ~
-  - end_z: float, ~
-  - prefab_id: int, prefab id of road to be built, check Road prefab table for detail
+  - start_z: float, start z coordinate of the road
+  - end_x: float, end x coordinate of the road
+  - end_z: float, end z coordinate of the road
+  - prefab_id: int, prefab id of road to be built, check Road Prefab Table for detail
 - response parameter
-  - status: "ok" or "error"
-  - message: succeed: "success"; failed: error message
+  - status: string, "ok" or "error"
+  - message: string, succeed: "success"; failed: error message
 
-## Create_Building
+### Create_Building
 Construct a specified building at the designated location and orientation.
 - request parameter
   - action: string, "Create_Building"
   - pox_x: int, x coordinate of the building
-  - pox_z: int, ~
+  - pox_z: int, z coordinate of the building
   - angle: float, building orientation expressed in radians
-  - prefab_id: int, prefab id of building to be built, check Building prefab table for detail
+  - prefab_id: int, prefab id of building to be built, check Building Prefab Table for detail
 - response parameter
-  - status: "ok" or "error"
-  - message: succeed: "success"; failed: error message
+  - status: string, "ok" or "error"
+  - message: string, succeed: "success"; failed: error message
+
+## Camera
+
+### Get_Camera_Position
+Get the current position coordinates (x, y, z) of the camera, unit: meters
+- request parameter
+  - action: string, "Get_Camera_Position"
+- response parameter
+  - status: string, "ok" or "error"
+  - message: string, succeed: "success"; failed: error message
+  - pos_x: float, camera's x coordinate
+  - pos_y: float, ~
+  - pos_z: float, ~
+
+### Get_Camera_Rotation
+Get the camera's orientation (horizontal and pitch angles), angle in degrees
+- request parameter
+  - action: string, "Get_Camera_Rotation"
+- response parameter
+  - status: string, "ok" or "error"
+  - message: string, succeed: "success"; failed: error message
+  - rot_yaw: float, horizontal angle
+  - rot_pitch: float, pitch angle
+
+### Move_Camera
+Specify a vector (x, y, z) to move the camera by, in world coordinates or local coordinates (determined by the camera's orientation)
+- request parameter
+  - action: string, "Move_Camera"
+  - pos_x: float, movement vector's x coordinate
+  - pos_y: float, ~
+  - pos_z: float, ~
+  - relative_to_camera: bool, true: move based on the camera's local coordinate system; false: move based on the world coordinate system
+- response parameter
+  - status: string, "ok" or "error"
+  - message: string, succeed: "success"; failed: error message
+
+### Rotate_Camera
+Specify horizontal and pitch rotation angles (in degrees) to rotate the camera
+- request parameter
+  - action: string, "Rotate_Camera"
+  - rot_yaw: float, horizontal rotation angle
+  - rot_pitch: float, pitch rotation angle
+- response parameter
+  - status: string, "ok" or "error"
+  - message: string, succeed: "success"; failed: error message
+
+### Set_Camera_Position
+Specify a coordinate (x,y,z) in world coordinates to move the camera to the specific location
+- request parameter
+  - action: string, "Set_Camera_Position"
+  - pos_x: float, target position x coordinate
+  - pos_y: float, ~
+  - pos_z: float, ~
+- response parameter
+  - status: string, "ok" or "error"
+  - message: string, succeed: "success"; failed: error message
+
+### Set_Camera_Rotation
+Specify horizontal and pitch angles (in world coordinates) to rotate the camera to the specific orientation
+- request parameter
+  - action: string, "Set_Camera_Rotation"
+  - rot_yaw: float, horizontal angle
+  - rot_pitch: float, pitch angle
+- response parameter
+  - status: string, "ok" or "error"
+  - message: string, succeed: "success"; failed: error message
