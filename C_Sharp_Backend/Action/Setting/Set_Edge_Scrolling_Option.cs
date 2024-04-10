@@ -8,7 +8,9 @@ using ColossalFramework.UI;
 namespace Emulator_Backend{
 
     public class Set_Edge_Scrolling_Option: Action_Base{
-        private OptionsGameplayPanel panel = null;
+        const int DELAY_TIME = 25000; //milliseconds
+
+        private OptionsGameplayPanel options_gameplay_panel;
 
         public Set_Edge_Scrolling_Option(){
             this.parameter_type_dict = new Dictionary<string, string>(){
@@ -24,21 +26,21 @@ namespace Emulator_Backend{
             };
         }
 
-        public override void On_enable(){
-            int time = 25000; //milliseconds
+        public override void On_level_loaded(){
+            this.options_gameplay_panel = UIView.library.Get<OptionsMainPanel>("OptionsPanel").GetComponentInChildren<OptionsGameplayPanel>();
 
-            Timer timer = new Timer(this.On_enable_callback, false, time, Timeout.Infinite);
+            Timer timer = new Timer(
+                this.On_level_loaded_callback,
+                false,
+                Set_Edge_Scrolling_Option.DELAY_TIME,
+                Timeout.Infinite
+            );
         }
 
-        private void On_enable_callback(object is_enable){
+        private void On_level_loaded_callback(object is_enable){
             var is_enable_flag = Convert.ToBoolean(is_enable);
 
-            if (this.panel == null){
-                var options_main_panel = UIView.library.Get<OptionsMainPanel>("OptionsPanel");
-                this.panel = options_main_panel.GetComponentInChildren<OptionsGameplayPanel>();
-            }
-
-            this.panel.edgeScrolling = is_enable_flag;
+            this.options_gameplay_panel.edgeScrolling = is_enable_flag;
         }
     }
 

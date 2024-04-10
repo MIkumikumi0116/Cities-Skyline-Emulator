@@ -15,34 +15,34 @@ namespace Emulator_Backend {
     public class Point: IEquatable<Point> { // 这里使用IEquatable<Point>的原因是，为了让Pair<>中可以使用Point作为key
         public static readonly float EPS = 1e-2f;
         public float X_pos { get; set; }
-        public float Y_pos { get; set; }
+        public float Z_pos { get; set; }
 
         public Point() {
             this.X_pos = 0;
-            this.Y_pos = 0;
+            this.Z_pos = 0;
         }
         public Point(float x, float y) {
             this.X_pos = x;
-            this.Y_pos = y;
+            this.Z_pos = y;
         }
 
         public static Point operator +(Point a, Point b) {
-            return new Point(a.X_pos + b.X_pos, a.Y_pos + b.Y_pos);
+            return new Point(a.X_pos + b.X_pos, a.Z_pos + b.Z_pos);
         }
         public static Point operator -(Point a, Point b) {
-            return new Point(a.X_pos - b.X_pos, a.Y_pos - b.Y_pos);
+            return new Point(a.X_pos - b.X_pos, a.Z_pos - b.Z_pos);
         }
         public static Point operator *(Point a, float d) {
-            return new Point(a.X_pos * d, a.Y_pos * d);
+            return new Point(a.X_pos * d, a.Z_pos * d);
         }
         public static Point operator *(float d, Point a) {
-            return new Point(a.X_pos * d, a.Y_pos * d);
+            return new Point(a.X_pos * d, a.Z_pos * d);
         }
         public static Point operator /(Point a, float d) {
-            return new Point(a.X_pos / d, a.Y_pos / d);
+            return new Point(a.X_pos / d, a.Z_pos / d);
         }
         public static bool operator ==(Point a, Point b) {
-            return Point.Cmp(a.X_pos, b.X_pos) == 0 && Point.Cmp(a.Y_pos, b.Y_pos) == 0;
+            return Point.Cmp(a.X_pos, b.X_pos) == 0 && Point.Cmp(a.Z_pos, b.Z_pos) == 0;
         }
         public static bool operator !=(Point a, Point b) {
             return !(a == b);
@@ -58,7 +58,7 @@ namespace Emulator_Backend {
             return Point.Sign(float_value_1 - float_value_2);
         }
         public static float Cross(Point p1, Point p2, Point p3) { // cross product in 2D space
-            return (p2.X_pos - p1.X_pos) * (p3.Y_pos - p1.Y_pos) - (p3.X_pos - p1.X_pos) * (p2.Y_pos - p1.Y_pos);
+            return (p2.X_pos - p1.X_pos) * (p3.Z_pos - p1.Z_pos) - (p3.X_pos - p1.X_pos) * (p2.Z_pos - p1.Z_pos);
         }
         public static float Cross_Op(Point p1, Point p2, Point p3) { // cross product in 2D space, but ignore the magnitude
             return Point.Sign(Point.Cross(p1, p2, p3));
@@ -78,7 +78,7 @@ namespace Emulator_Backend {
         public static bool Intersect(Point p1, Point p2, Point q1, Point q2) { // 线段相交
             return (
                 Point.Intersect(p1.X_pos, p2.X_pos, q1.X_pos, q2.X_pos) &&
-                Point.Intersect(p1.Y_pos, p2.Y_pos, q1.Y_pos, q2.Y_pos) &&
+                Point.Intersect(p1.Z_pos, p2.Z_pos, q1.Z_pos, q2.Z_pos) &&
                 Point.Cross_Op(p1, p2, q1) * Point.Cross_Op(p1, p2, q2) <= 0  &&
                 Point.Cross_Op(q1, q2, p1) * Point.Cross_Op(q1, q2, p2) <= 0
             );
@@ -96,39 +96,39 @@ namespace Emulator_Backend {
             return(
                 obj is Point point &&
                 this.X_pos == point.X_pos &&
-                this.Y_pos == point.Y_pos
+                this.Z_pos == point.Z_pos
             );
         }
         public bool Equals(Point point) {
             return(
                 this.X_pos == point.X_pos &&
-                this.Y_pos == point.Y_pos
+                this.Z_pos == point.Z_pos
             );
         }
         public override string ToString() {
-            return "(" + this.X_pos + ", " + this.Y_pos + ")";
+            return "(" + this.X_pos + ", " + this.Z_pos + ")";
         }
         public override int GetHashCode() { // 继承IEquatable<Point> 要求对GetHashCode进行重载
             unchecked{ // 使用 unchecked 防止溢出，这在计算哈希码时是常见的
                 int hash = 17;
                 hash = hash * 31 + ((int)(this.X_pos * 100) / 100.0f).GetHashCode();
-                hash = hash * 31 + ((int)(this.Y_pos * 100) / 100.0f).GetHashCode();
+                hash = hash * 31 + ((int)(this.Z_pos * 100) / 100.0f).GetHashCode();
 
                 return hash;
             }
         }
 
         public float Dot(Point p) { // dot product
-            return this.X_pos * p.X_pos + this.Y_pos * p.Y_pos;
+            return this.X_pos * p.X_pos + this.Z_pos * p.Z_pos;
         }
         public float Det(Point p) { // cross product
-            return this.X_pos * p.Y_pos - this.Y_pos * p.X_pos;
+            return this.X_pos * p.Z_pos - this.Z_pos * p.X_pos;
         }
         public float Dist_To(Point p) { // distance to another point
             return (this - p).Abs();
         }
         public float Abs() { // magnitude
-            return (float)Math.Sqrt((float)(this.X_pos * this.X_pos + this.Y_pos * this.Y_pos));
+            return (float)Math.Sqrt((float)(this.X_pos * this.X_pos + this.Z_pos * this.Z_pos));
         }
     }
 }

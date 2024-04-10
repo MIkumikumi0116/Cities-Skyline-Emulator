@@ -8,6 +8,9 @@ using ColossalFramework;
 namespace Emulator_Backend{
 
     public class Create_Building: Action_Base{
+        TerrainManager    terrain_manager;
+        BuildingManager   building_manager;
+        SimulationManager simulation_manager;
 
         public Create_Building() {
             this.parameter_type_dict = new Dictionary<string, string>{
@@ -17,6 +20,12 @@ namespace Emulator_Backend{
                 {"angle",     "float"},
                 {"prefab_id", "uint"}
             };
+        }
+
+        public override void On_level_loaded(){
+            this.terrain_manager    = Singleton<TerrainManager>.instance;
+            this.building_manager   = Singleton<BuildingManager>.instance;
+            this.simulation_manager = Singleton<SimulationManager>.instance;
         }
 
         public override Dictionary<string, object> Perform_action(Dictionary<string, object> action_param_dict){
@@ -41,22 +50,20 @@ namespace Emulator_Backend{
         }
 
         private void Create_building_perform(float pos_x, float pos_z, float angle, uint prefab_id){
-            var height = Singleton<TerrainManager>.instance.SampleRawHeightSmooth(new Vector3(pos_x, 0, pos_z));
+            var height = this.terrain_manager.SampleRawHeightSmooth(new Vector3(pos_x, 0, pos_z));
             var pos = new Vector3(pos_x, height, pos_z);
 
-            if (
-                Singleton<BuildingManager>.instance.CreateBuilding(
-                    out _,
-                    ref Singleton<SimulationManager>.instance.m_randomizer,
-                    PrefabCollection<BuildingInfo>.GetPrefab(prefab_id),
-                    pos,
-                    angle,
-                    0,
-                    Singleton<SimulationManager>.instance.m_currentBuildIndex
-            )
-            ){
-                Singleton<SimulationManager>.instance.m_currentBuildIndex++;
-            }
+            this.building_manager.CreateBuilding(
+                out _,
+                ref this.simulation_manager.m_randomizer,
+                PrefabCollection<BuildingInfo>.GetPrefab(prefab_id),
+                pos,
+                angle,
+                0,
+                this.simulation_manager.m_currentBuildIndex
+            );
+
+            this.simulation_manager.m_currentBuildIndex++;
         }
     }
 

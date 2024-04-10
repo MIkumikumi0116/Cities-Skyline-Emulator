@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Emulator_Backend{
 
     public class Set_Camera_Position: Action_Base{
-        private CameraController controller = null;
+        private CameraController camera_controller;
 
         public Set_Camera_Position() {
             this.parameter_type_dict = new Dictionary<string, string>{
@@ -16,6 +16,10 @@ namespace Emulator_Backend{
                 {"pos_y",  "float"},
                 {"pos_z",  "float"},
             };
+        }
+
+        public override void On_level_loaded(){
+            this.camera_controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
         }
 
         public override Dictionary<string, object> Perform_action(Dictionary<string, object> action_param_dict){
@@ -39,13 +43,9 @@ namespace Emulator_Backend{
         }
 
         private void Set_camera_position_perform(float pos_x, float pos_y, float pos_z){
-            if (this.controller == null){
-                this.controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
-            }
-
             var new_pos = new Vector3(pos_x, pos_y, pos_z);
-            this.controller.m_targetPosition = new_pos;
-            this.controller.m_targetSize = pos_y;
+            this.camera_controller.m_targetPosition = new_pos;
+            this.camera_controller.m_targetSize     = pos_y;
         }
     }
 

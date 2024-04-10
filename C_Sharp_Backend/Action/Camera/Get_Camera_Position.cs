@@ -6,12 +6,16 @@ using UnityEngine;
 namespace Emulator_Backend{
 
     public class Get_Camera_Position: Action_Base{
-        private CameraController controller = null;
+        private CameraController camera_controller;
 
         public Get_Camera_Position() {
             this.parameter_type_dict = new Dictionary<string, string>{
                 {"action", "string"}
             };
+        }
+
+        public override void On_level_loaded(){
+            this.camera_controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
         }
 
         public override Dictionary<string, object> Perform_action(Dictionary<string, object> action_param_dict){
@@ -34,11 +38,7 @@ namespace Emulator_Backend{
         }
 
         private void Get_camera_position_perform(out float pos_x, out float pos_y, out float pos_z){
-            if (this.controller == null){
-                this.controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
-            }
-
-            var pos = this.controller.m_targetPosition;
+            var pos = this.camera_controller.m_targetPosition;
 
             pos_x = pos.x;
             pos_y = pos.y;

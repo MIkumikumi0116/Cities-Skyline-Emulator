@@ -6,12 +6,16 @@ using UnityEngine;
 namespace Emulator_Backend{
 
     public class Get_Camera_Rotation: Action_Base{
-        private CameraController controller = null;
+        private CameraController camera_controller;
 
         public Get_Camera_Rotation() {
             this.parameter_type_dict = new Dictionary<string, string>{
                 {"action", "string"}
             };
+        }
+
+        public override void On_level_loaded(){
+            this.camera_controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
         }
 
         public override Dictionary<string, object> Perform_action(Dictionary<string, object> action_param_dict){
@@ -33,11 +37,7 @@ namespace Emulator_Backend{
         }
 
         private void Get_camera_rotation_perform(out float rot_pitch, out float rot_yaw){
-            if (this.controller == null){
-                this.controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
-            }
-
-            var rot = this.controller.m_targetAngle;
+            var rot = this.camera_controller.m_targetAngle;
 
             rot_pitch = rot.x;
             rot_yaw   = rot.y;

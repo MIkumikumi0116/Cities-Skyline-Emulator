@@ -8,12 +8,15 @@ using ColossalFramework;
 namespace Emulator_Backend {
 
     public class Build_Segment_Base : Action_Base {
-        const float SEGMENT_PITCH          = 80;
-        const float SEGMENT_PITCH_LOAD_MAX = 110; // 好像系统自带的一些奇怪segment长度过长，把这些在On_enable()加载时也筛掉
-        const float MIN_NODE_DISTANCE      = 8;   // 两个node之间的最小距离，新添加node离已有node的距离小于这个值时，合并为一个node
+        const float SEGMENT_PITCH     = 80;
+        const float MIN_NODE_DISTANCE = 8;   // 两个node之间的最小距离，新添加node离已有node的距离小于这个值时，合并为一个node
+        const float MIN_SEGMENT_ANGLE = 30;  // 两个segment之间的最小夹角，新添加segment与已有segment的夹角小于这个值时，报错
 
         private readonly bool IS_DEBUG_MODE = true;
         private NetManager net_manager;
+
+        private List<ushort> new_node_id_list    = new List<ushort>(); // 一次调用中新建的node，失败时回滚删除
+        private List<ushort> new_segment_id_list = new List<ushort>();
 
         // 注意事项：
         // 1. 因为游戏内有很多空的Node和Segment，所以这里用Dictionary来存储。同时，我们不会将position==(0,0,0)和startNode==0的Node和Segment存储进去
@@ -117,37 +120,42 @@ namespace Emulator_Backend {
             var direction = delta.normalized;
             var length    = delta.magnitude;
 
-            error_message = "";
-            var new_node_id_list    = new List<ushort>(); // 记录新建的node，失败时回滚删除
-            var new_segment_id_list = new List<ushort>();
+            var succeed_flag = true;
+            error_message    = "";
             for (float delta_pos = 0; delta_pos + Build_Segment_Base.SEGMENT_PITCH <= length; delta_pos += Build_Segment_Base.SEGMENT_PITCH) {
-                var succeed_flag = this.Make_segment(
+                succeed_flag = this.Make_segment(
                     start_pos + direction * delta_pos,
                     start_pos + direction * Math.Min(delta_pos + Build_Segment_Base.SEGMENT_PITCH, length),
                     prefab_id,
-                    ref new_node_id_list,
-                    ref new_segment_id_list,
                     out error_message
                 );
 
                 if (!succeed_flag) {
-                    foreach(var segment_index in new_segment_id_list) {
+                    foreach(var segment_index in this.new_segment_id_list) {
                         this.Release_segment(segment_index);
                     }
-                    foreach (var node_index   in new_node_id_list) {
+                    foreach (var node_index   in this.new_node_id_list) {
                         this.Release_node(node_index);
                     }
 
-                    return false;
+                    break;
                 }
             }
 
-            return true;
+            this.new_node_id_list.Clear();
+            this.new_segment_id_list.Clear();
+
+            if (succeed_flag){
+                return true;
+            }
+            else{
+                return false;
+            }
         }
 
 
 
-        private bool Make_segment(Vector3 start_pos, Vector3 end_pos, uint prefab_id, ref List<ushort> new_node_id_list, ref List<ushort> new_segment_id_list, out string error_message){
+        private bool Make_segment(Vector3 start_pos, Vector3 end_pos, uint prefab_id, out string error_message){
             error_message   = "";
 
             var start_point = new Point(start_pos.x, start_pos.z);
@@ -156,33 +164,31 @@ namespace Emulator_Backend {
             // 1. 遍历所有segment求交点，得到 intersection_point_list[..]，记录交点本身和对应边
             var intersection_point_and_segment_list = new List<Pair<Point, ushort>>();
             foreach (var segment_id_and_node_pair in this.segment_dict) {
-                if (this.node_dict[segment_id_and_node_pair.Value.First] == null || this.node_dict[segment_id_and_node_pair.Value.Second] == null) {
-                    Debug.LogError("nodes is null in Make_segments!");
-                    continue;
-                }
+                var node_1 = this.node_dict[segment_id_and_node_pair.Value.First];
+                var node_2 = this.node_dict[segment_id_and_node_pair.Value.Second];
 
-                var segment_point_1 = new Point(this.node_dict[segment_id_and_node_pair.Value.First].x,  this.node_dict[segment_id_and_node_pair.Value.First].z);
-                var segment_point_2 = new Point(this.node_dict[segment_id_and_node_pair.Value.Second].x, this.node_dict[segment_id_and_node_pair.Value.Second].z);
+                var node_1_point = new Point(node_1.x, node_1.z);
+                var node_2_point = new Point(node_2.x, node_2.z);
 
                 if (
-                    segment_point_1 == start_point ||
-                    segment_point_2 == start_point ||
-                    segment_point_1 == end_point   ||
-                    segment_point_2 == end_point
+                    node_1_point == start_point ||
+                    node_2_point == start_point ||
+                    node_1_point == end_point   ||
+                    node_2_point == end_point
                 ){
                     continue;
                 }
 
                 // 先确定相交才可以求交点，因为第一个函数是“两线段是否相交”，第二个函数是“两直线求交点”
-                if (!Point.Intersect(start_point, end_point, segment_point_1, segment_point_2)){
+                if (!Point.Intersect(start_point, end_point, node_1_point, node_2_point)){
                     continue; // 不相交，则直接continue
                 }
 
-                var intersection_point_and_segment = Point.Get_intersection_point(start_point, end_point, segment_point_1, segment_point_2); // 相交，求交点
+                var intersection_point_and_segment = Point.Get_intersection_point(start_point, end_point, node_1_point, node_2_point); // 相交，求交点
                 intersection_point_and_segment_list.Add(new Pair<Point, ushort>(intersection_point_and_segment, segment_id_and_node_pair.Key));
 
                 if (IS_DEBUG_MODE){
-                    Debug.Log(intersection_point_and_segment + " between " + start_point + ", " + end_point + "; " + segment_point_1 + ", " + segment_point_2);
+                    Debug.Log(intersection_point_and_segment + " between " + start_point + ", " + end_point + "; " + node_1_point + ", " + node_2_point);
                 }
             }
 
@@ -210,7 +216,7 @@ namespace Emulator_Backend {
             foreach(var intersection_point_and_segment in intersection_point_and_segment_list){
                 var intersection_segment_id = intersection_point_and_segment.Second;
 
-                var intersection_point_pos          = new Vector3(intersection_point_and_segment.First.X_pos, 0, intersection_point_and_segment.First.Y_pos);
+                var intersection_point_pos          = new Vector3(intersection_point_and_segment.First.X_pos, 0, intersection_point_and_segment.First.Z_pos);
                 var intersection_segment_node_pos_1 = this.node_dict[this.segment_dict[intersection_segment_id].First];
                 var intersection_segment_node_pos_2 = this.node_dict[this.segment_dict[intersection_segment_id].Second];
 

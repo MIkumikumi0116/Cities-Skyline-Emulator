@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Emulator_Backend{
 
     public class Move_Camera: Action_Base{
-        private CameraController controller = null;
+        private CameraController camera_controller;
 
         public Move_Camera() {
             this.parameter_type_dict = new Dictionary<string, string>{
@@ -17,6 +17,10 @@ namespace Emulator_Backend{
                 {"pos_z",  "float"},
                 {"relative_to_camera", "bool"}
             };
+        }
+
+        public override void On_level_loaded(){
+            this.camera_controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
         }
 
         public override Dictionary<string, object> Perform_action(Dictionary<string, object> action_param_dict){
@@ -41,16 +45,12 @@ namespace Emulator_Backend{
         }
 
         private void Move_camera_perform(float pos_x, float pos_y, float pos_z, bool relative_to_camera){
-            if (this.controller == null){
-                this.controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
-            }
-
-            var current_pos = this.controller.m_targetPosition;
+            var current_pos = this.camera_controller.m_targetPosition;
             var delta_pos   = new Vector3(pos_x, pos_y, pos_z);
 
             Vector3 new_pos;
             if (relative_to_camera){
-                var rotation  = this.controller.m_targetAngle;
+                var rotation  = this.camera_controller.m_targetAngle;
                 var direction = Quaternion.Euler(rotation.x, rotation.y, 0);
                 new_pos       = current_pos + direction * delta_pos;
             }
@@ -58,8 +58,8 @@ namespace Emulator_Backend{
                 new_pos = current_pos + delta_pos;
             }
 
-            this.controller.m_targetPosition = new_pos;
-            this.controller.m_targetSize = new_pos.y;
+            this.camera_controller.m_targetPosition = new_pos;
+            this.camera_controller.m_targetSize     = new_pos.y;
         }
     }
 
