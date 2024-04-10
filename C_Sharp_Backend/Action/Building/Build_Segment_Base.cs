@@ -8,10 +8,12 @@ using ColossalFramework;
 namespace Emulator_Backend {
 
     public class Build_Segment_Base : Action_Base {
-        const float SEGMENT_PITCH = 80;
+        const float SEGMENT_PITCH          = 80;
         const float SEGMENT_PITCH_LOAD_MAX = 110; // 好像系统自带的一些奇怪segment长度过长，把这些在On_enable()加载时也筛掉
+        const float MIN_NODE_DISTANCE      = 8;   // 两个node之间的最小距离，新添加node离已有node的距离小于这个值时，合并为一个node
 
-        private readonly bool IS_DEBUG_MODE = false;
+        private readonly bool IS_DEBUG_MODE = true;
+        private NetManager net_manager;
 
         // 注意事项：
         // 1. 因为游戏内有很多空的Node和Segment，所以这里用Dictionary来存储。同时，我们不会将position==(0,0,0)和startNode==0的Node和Segment存储进去
@@ -21,7 +23,7 @@ namespace Emulator_Backend {
         private readonly Dictionary<Vector3, ushort> position_to_node_dict                  = new Dictionary<Vector3, ushort>();
         private readonly Dictionary<Pair<ushort, ushort>, ushort> node_pair_to_segment_dict = new Dictionary<Pair<ushort, ushort>, ushort>(); // 注意！Key.First <= Key.Second
 
-        public Build_Segment_Base() {
+        public Build_Segment_Base(){
             this.parameter_type_dict = new Dictionary<string, string>{
                 {"action",    "string"},
                 {"start_x",   "float"},
@@ -32,43 +34,53 @@ namespace Emulator_Backend {
             };
         }
 
-        public override void On_enable() {
-            // Load nodes
-            for (ushort node_index = 0; node_index < Singleton<NetManager>.instance.m_nodeCount; node_index++) {
-                if (Singleton<NetManager>.instance.m_nodes.m_buffer[node_index].m_position.x == 0){
+        public override void On_level_loaded(){
+            this.net_manager = Singleton<NetManager>.instance;
+
+            ushort node_index = 0;
+            var    node_list  = this.net_manager.m_nodes.m_buffer;
+            foreach (var node_info in node_list){
+                node_index++;
+
+                if ((node_info.m_flags & NetNode.Flags.Created) == 0){
                     continue;
                 }
 
-                var position = Singleton<NetManager>.instance.m_nodes.m_buffer[node_index].m_position;
+                var position = node_info.m_position;
                 position = this.Process_vector3(position);
-                this.node_dict.Add(node_index, position);
-                this.position_to_node_dict[position] = node_index;
+
+                this.node_dict.Add((ushort)(node_index - 1), position);
+                this.position_to_node_dict[position] = (ushort)(node_index - 1u);
             }
 
-            // Load segments
-            for (ushort segments_index = 0; segments_index < Singleton<NetManager>.instance.m_segmentCount; segments_index++) {
-                if (
-                    Singleton<NetManager>.instance.m_segments.m_buffer[segments_index].m_startNode == 0 ||
-                    Singleton<NetManager>.instance.m_segments.m_buffer[segments_index].m_endNode   == 0
-                ){
+            ushort segment_index = 0;
+            var    segment_list  = this.net_manager.m_segments.m_buffer;
+            foreach(var segment_info in segment_list){
+                segment_index++;
+
+                if ((segment_info.m_flags & NetSegment.Flags.Created) == 0){
                     continue;
                 }
 
-                var start = Singleton<NetManager>.instance.m_segments.m_buffer[segments_index].m_startNode;
-                var end   = Singleton<NetManager>.instance.m_segments.m_buffer[segments_index].m_endNode;
-                if ((node_dict[start] - node_dict[end]).magnitude > Build_Segment_Base.SEGMENT_PITCH_LOAD_MAX){
-                    continue;
-                }
+                var start_node_index = segment_info.m_startNode;
+                var end_node_index   = segment_info.m_endNode;
 
-                var node_pair = Pair<ushort, ushort>.Make_sorted_pair(start, end);
-                this.segment_dict.Add(segments_index, node_pair);
-                this.node_pair_to_segment_dict[node_pair] = segments_index;
+                var node_pair = Pair<ushort, ushort>.Make_sorted_pair(start_node_index, end_node_index);
+                this.segment_dict.Add((ushort)(segment_index - 1), node_pair);
+                this.node_pair_to_segment_dict[node_pair] = (ushort)(segment_index - 1);
             }
-
-            if(IS_DEBUG_MODE) Debug.Log("Build_Segment_Base enabled");
         }
 
-        public override Dictionary<string, object> Perform_action(Dictionary<string, object> action_param_dict) {
+        public override void On_released(){
+            this.node_dict.Clear();
+            this.segment_dict.Clear();
+            this.position_to_node_dict.Clear();
+            this.node_pair_to_segment_dict.Clear();
+        }
+
+
+
+        public override Dictionary<string, object> Perform_action(Dictionary<string, object> action_param_dict){
             if (!this.Check_parameter_validity(action_param_dict, out string parameter_validity_message)) {
                 return new Dictionary<string, object> {
                     {"status", "error"},
@@ -82,55 +94,80 @@ namespace Emulator_Backend {
             var end_z     = Convert.ToSingle(action_param_dict["end_z"]);
             var prefab_id = Convert.ToUInt32(action_param_dict["prefab_id"]);
 
-            this.Build_straight_road_perform(start_x, start_z, end_x, end_z, prefab_id);
+            var succeed_flag = this.Build_straight_road_perform(start_x, start_z, end_x, end_z, prefab_id, out string error_message);
 
-            return new Dictionary<string, object> {
-                {"status",  "ok"},
-                {"message", "success"}
-            };
+            if (succeed_flag){
+                return new Dictionary<string, object> {
+                    {"status",  "ok"},
+                    {"message", "success"}
+                };
+            }
+            else{
+                return new Dictionary<string, object> {
+                    {"status",  "error"},
+                    {"message", error_message}
+                };
+            }
         }
 
-        private void Build_straight_road_perform(float start_x, float start_z, float end_x, float end_z, uint prefab_id) {
+        private bool Build_straight_road_perform(float start_x, float start_z, float end_x, float end_z, uint prefab_id, out string error_message){
             var start_pos = new Vector3(start_x, 0, start_z);
-            var end_pos   = new Vector3(end_x, 0, end_z);
+            var end_pos   = new Vector3(end_x,   0, end_z);
             var delta     = end_pos - start_pos;
             var direction = delta.normalized;
             var length    = delta.magnitude;
 
+            error_message = "";
+            var new_node_id_list    = new List<ushort>(); // 记录新建的node，失败时回滚删除
+            var new_segment_id_list = new List<ushort>();
             for (float delta_pos = 0; delta_pos + Build_Segment_Base.SEGMENT_PITCH <= length; delta_pos += Build_Segment_Base.SEGMENT_PITCH) {
-                this.Make_segment(
+                var succeed_flag = this.Make_segment(
                     start_pos + direction * delta_pos,
                     start_pos + direction * Math.Min(delta_pos + Build_Segment_Base.SEGMENT_PITCH, length),
-                    prefab_id
+                    prefab_id,
+                    ref new_node_id_list,
+                    ref new_segment_id_list,
+                    out error_message
                 );
+
+                if (!succeed_flag) {
+                    foreach(var segment_index in new_segment_id_list) {
+                        this.Release_segment(segment_index);
+                    }
+                    foreach (var node_index   in new_node_id_list) {
+                        this.Release_node(node_index);
+                    }
+
+                    return false;
+                }
             }
+
+            return true;
         }
 
 
 
-        private void Make_segment(Vector3 start, Vector3 end, uint prefab_id) {
-            var intersection_point_list = new List<Pair<Point, ushort>>();
+        private bool Make_segment(Vector3 start_pos, Vector3 end_pos, uint prefab_id, ref List<ushort> new_node_id_list, ref List<ushort> new_segment_id_list, out string error_message){
+            error_message   = "";
 
-            var start_point = new Point(start.x, start.z);
-            var end_point   = new Point(end.x,   end.z);
-
-            if (IS_DEBUG_MODE) Debug.Log(" ============== Start Make Segments =========== ");
+            var start_point = new Point(start_pos.x, start_pos.z);
+            var end_point   = new Point(end_pos.x,   end_pos.z);
 
             // 1. 遍历所有segment求交点，得到 intersection_point_list[..]，记录交点本身和对应边
-            foreach (var segment_info in this.segment_dict) {
-                if (this.node_dict[segment_info.Value.First] == null || this.node_dict[segment_info.Value.Second] == null) {
+            var intersection_point_and_segment_list = new List<Pair<Point, ushort>>();
+            foreach (var segment_id_and_node_pair in this.segment_dict) {
+                if (this.node_dict[segment_id_and_node_pair.Value.First] == null || this.node_dict[segment_id_and_node_pair.Value.Second] == null) {
                     Debug.LogError("nodes is null in Make_segments!");
                     continue;
                 }
 
-                var segment_point_1 = new Point(this.node_dict[segment_info.Value.First].x,  this.node_dict[segment_info.Value.First].z);
-                var segment_point_2 = new Point(this.node_dict[segment_info.Value.Second].x, this.node_dict[segment_info.Value.Second].z);
+                var segment_point_1 = new Point(this.node_dict[segment_id_and_node_pair.Value.First].x,  this.node_dict[segment_id_and_node_pair.Value.First].z);
+                var segment_point_2 = new Point(this.node_dict[segment_id_and_node_pair.Value.Second].x, this.node_dict[segment_id_and_node_pair.Value.Second].z);
 
                 if (
-                    segment_point_1 == segment_point_2 ||
-                    segment_point_1 == start_point     ||
-                    segment_point_2 == start_point     ||
-                    segment_point_1 == end_point       ||
+                    segment_point_1 == start_point ||
+                    segment_point_2 == start_point ||
+                    segment_point_1 == end_point   ||
                     segment_point_2 == end_point
                 ){
                     continue;
@@ -141,18 +178,19 @@ namespace Emulator_Backend {
                     continue; // 不相交，则直接continue
                 }
 
-                var intersection_point = Point.Get_intersection_point(start_point, end_point, segment_point_1, segment_point_2); // 相交，求交点
+                var intersection_point_and_segment = Point.Get_intersection_point(start_point, end_point, segment_point_1, segment_point_2); // 相交，求交点
+                intersection_point_and_segment_list.Add(new Pair<Point, ushort>(intersection_point_and_segment, segment_id_and_node_pair.Key));
 
-                if (IS_DEBUG_MODE) Debug.Log(intersection_point + " between " + start_point + ", " + end_point + "; " + segment_point_1 + ", " + segment_point_2);
-
-                intersection_point_list.Add(new Pair<Point, ushort>(intersection_point, segment_info.Key));
+                if (IS_DEBUG_MODE){
+                    Debug.Log(intersection_point_and_segment + " between " + start_point + ", " + end_point + "; " + segment_point_1 + ", " + segment_point_2);
+                }
             }
 
             // 2.1 去重！
             //intersections = intersections.Distinct().ToList();
 
             // 2.2 将所有交点按照距离stx和stz的距离排序
-            intersection_point_list.Sort(
+            intersection_point_and_segment_list.Sort(
                 (point_a, point_b) => {
                     float dist_a = (point_a.First - start_point).Abs();
                     float dist_b = (point_b.First - start_point).Abs();
@@ -161,11 +199,6 @@ namespace Emulator_Backend {
                 }
             );
 
-            //foreach (var intersect in intersections) {
-            //    var segment = segments[intersect.Second];
-            //    Debug.Log(intersect.First + " between " + nodes[segment.First] + ", " + nodes[segment.Second]);
-            //}
-
             /*
             3. 遍历每个交点，假设当前遍历到交点i
                - 删除对应边
@@ -173,59 +206,71 @@ namespace Emulator_Backend {
                - 连接node与上个点和原边的两个点（不可递归）
                - 将上个点替换为当前node
             */
-            Vector3 last_point = start;
-            foreach(var intersection_point_info in intersection_point_list){
-                Point intersect_point  = intersection_point_info.First;
-                ushort segment_id      = intersection_point_info.Second;
+            Vector3 last_pos = start_pos;
+            foreach(var intersection_point_and_segment in intersection_point_and_segment_list){
+                var intersection_segment_id = intersection_point_and_segment.Second;
 
-                Vector3 segment_node_1 = this.node_dict[segment_dict[segment_id].First];
-                Vector3 segment_node_2 = this.node_dict[segment_dict[segment_id].Second];
+                var intersection_point_pos          = new Vector3(intersection_point_and_segment.First.X_pos, 0, intersection_point_and_segment.First.Y_pos);
+                var intersection_segment_node_pos_1 = this.node_dict[this.segment_dict[intersection_segment_id].First];
+                var intersection_segment_node_pos_2 = this.node_dict[this.segment_dict[intersection_segment_id].Second];
 
-                if (IS_DEBUG_MODE) Debug.Log("An intersection in " + intersect_point + " with segment from " + segment_node_1 + " to " + segment_node_2);
+                Debug.Log((intersection_point_pos - intersection_segment_node_pos_1).magnitude);
+                Debug.Log((intersection_point_pos - intersection_segment_node_pos_2).magnitude);
 
-                // 删除对应边
-                this.Release_segment(segment_id);
+                var net_manager = Singleton<NetManager>.instance;
+                if ((intersection_point_pos - intersection_segment_node_pos_1).magnitude < Build_Segment_Base.MIN_NODE_DISTANCE){
+                    net_manager.MoveNode(this.segment_dict[intersection_segment_id].First, intersection_point_pos);
 
-                // 在交点处新增node
-                Vector3 intersection_point = new Vector3(intersect_point.X_pos, 0, intersect_point.Y_pos);
-                this.Get_or_make_node(ref intersection_point, prefab_id);
+                    this.Make_segment_not_considering_intersection(ref last_pos, ref intersection_point_pos, prefab_id, ref new_node_id_list, ref new_segment_id_list);
 
-                // 连接 node 与 上个点和原边的两个点（不可递归）
-                if ((last_point     - intersection_point).sqrMagnitude >= 0.1) { // sqrMagnitude复杂度低，反正这里都是经验值，不如来点小优化
-                    this.Make_segment_not_considering_intersection(ref last_point,     ref intersection_point, prefab_id);
+                    if (IS_DEBUG_MODE){
+                        Debug.Log("Move node " + this.segment_dict[intersection_segment_id].First.ToString() + " to " + intersection_point_pos.ToString());
+                    }
                 }
-                if ((segment_node_1 - intersection_point).sqrMagnitude >= 0.1) {
-                    this.Make_segment_not_considering_intersection(ref segment_node_1, ref intersection_point, prefab_id);
+                else if((intersection_point_pos - intersection_segment_node_pos_2).magnitude < Build_Segment_Base.MIN_NODE_DISTANCE){
+                    net_manager.MoveNode(this.segment_dict[intersection_segment_id].Second, intersection_point_pos);
+
+                    this.Make_segment_not_considering_intersection(ref last_pos, ref intersection_point_pos, prefab_id, ref new_node_id_list, ref new_segment_id_list);
+
+                    if (IS_DEBUG_MODE){
+                        Debug.Log("Move node " + this.segment_dict[intersection_segment_id].Second.ToString() + " to " + intersection_point_pos.ToString());
+                    }
                 }
-                if ((segment_node_2 - intersection_point).sqrMagnitude >= 0.1) {
-                    this.Make_segment_not_considering_intersection(ref segment_node_2, ref intersection_point, prefab_id);
+                else{
+                    this.Release_segment(intersection_segment_id);
+                    this.Get_or_make_node(ref intersection_point_pos, prefab_id, ref new_node_id_list);
+
+                    this.Make_segment_not_considering_intersection(ref last_pos,                        ref intersection_point_pos, prefab_id, ref new_node_id_list, ref new_segment_id_list);
+                    this.Make_segment_not_considering_intersection(ref intersection_segment_node_pos_1, ref intersection_point_pos, prefab_id, ref new_node_id_list, ref new_segment_id_list);
+                    this.Make_segment_not_considering_intersection(ref intersection_segment_node_pos_2, ref intersection_point_pos, prefab_id, ref new_node_id_list, ref new_segment_id_list);
                 }
 
-                // 将上个点(last_p)替换为当前node
-                last_point = intersection_point;
+                last_pos = intersection_point_pos;
             }
 
             // 4. 将末尾node连向(edx, edz)（不可递归）
-            this.Make_segment_not_considering_intersection(ref last_point, ref end, prefab_id);
+            this.Make_segment_not_considering_intersection(ref last_pos, ref end_pos, prefab_id, ref new_node_id_list, ref new_segment_id_list);
+
+            return true;
         }
 
-        private ushort Make_segment_not_considering_intersection(ref Vector3 start_pos, ref Vector3 end_pos, uint prefab_id) {
-            var start_node_id = this.Get_or_make_node(ref start_pos, prefab_id);
-            var end_node_id   = this.Get_or_make_node(ref end_pos, prefab_id);
-
-            Vector3 direction = (end_pos - start_pos).normalized;
+        private void Make_segment_not_considering_intersection(ref Vector3 start_pos, ref Vector3 end_pos, uint prefab_id, ref List<ushort> new_node_id_list, ref List<ushort> new_segment_id_list){
+            var start_node_id = this.Get_or_make_node(ref start_pos, prefab_id, ref new_node_id_list);
+            var end_node_id   = this.Get_or_make_node(ref end_pos,   prefab_id, ref new_node_id_list);
 
             if (start_node_id == end_node_id) {
-                throw new Exception("The length of segment is zero.");
+                return;
             }
 
             var node_pair = Pair<ushort, ushort>.Make_sorted_pair(start_node_id, end_node_id);
             if (this.node_pair_to_segment_dict.ContainsKey(node_pair)) {
-                return this.node_pair_to_segment_dict[node_pair];
+                return;
             }
 
+            Vector3 direction = (end_pos - start_pos).normalized;
+            var net_manager = Singleton<NetManager>.instance;
             if (
-                Singleton<NetManager>.instance.CreateSegment(
+                net_manager.CreateSegment(
                     out ushort segment_id,
                     ref Singleton<SimulationManager>.instance.m_randomizer,
                     PrefabCollection<NetInfo>.GetPrefab(prefab_id),
@@ -243,23 +288,33 @@ namespace Emulator_Backend {
                 this.segment_dict[segment_id] = node_pair;
                 this.node_pair_to_segment_dict[node_pair] = segment_id;
 
-                if (IS_DEBUG_MODE) Debug.Log("Made a segment in " + start_pos + " to " + end_pos + " at " + node_pair.First + ", " + node_pair.Second);
+                new_segment_id_list.Add(segment_id);
+
             } else {
                 throw new Exception("Error creating segment");
             }
 
-            return segment_id;
+            return;
         }
 
-        private void Release_segment(ushort segment_id) { // Release Segment == Remove Segment, 使用Release的原因是与Skyline代码统一
-            Singleton<NetManager>.instance.ReleaseSegment(segment_id, true); // 这里的true表示保持segment对应的node
+        private void Release_segment(ushort segment_id){ // Release Segment == Remove Segment, 使用Release的原因是与Skyline代码统一
+        var net_manager = Singleton<NetManager>.instance;
+            net_manager.ReleaseSegment(segment_id, true); // keep node = true，只删segment，不删node
 
-            var node_pair = Pair<ushort, ushort>.Make_sorted_pair(segment_dict[segment_id].First, segment_dict[segment_id].Second);
+            var node_pair = Pair<ushort, ushort>.Make_sorted_pair(this.segment_dict[segment_id].First, this.segment_dict[segment_id].Second);
             this.segment_dict.Remove(segment_id);
             this.node_pair_to_segment_dict.Remove(node_pair);
         }
 
-        private ushort Get_or_make_node(ref Vector3 node_pos, uint prefab_id) {
+        private void Release_node(ushort node_id){
+            var net_manager = Singleton<NetManager>.instance;
+            net_manager.ReleaseNode(node_id);
+
+            this.position_to_node_dict.Remove(this.node_dict[node_id]);
+            this.node_dict.Remove(node_id);
+        }
+
+        private ushort Get_or_make_node(ref Vector3 node_pos, uint prefab_id, ref List<ushort> new_node_id_list) {
             node_pos.y = Singleton<TerrainManager>.instance.SampleRawHeightSmooth(new Vector3(node_pos.x, 0, node_pos.z)) + 1f;
 
             node_pos = this.Process_vector3(node_pos);
@@ -268,8 +323,9 @@ namespace Emulator_Backend {
                 return this.position_to_node_dict[node_pos];
             }
 
+            var net_manager = Singleton<NetManager>.instance;
             if (
-                Singleton<NetManager>.instance.CreateNode(
+                net_manager.CreateNode(
                     out ushort node_id,
                     ref Singleton<SimulationManager>.instance.m_randomizer,
                     PrefabCollection<NetInfo>.GetPrefab(prefab_id),
@@ -282,7 +338,7 @@ namespace Emulator_Backend {
                 this.node_dict[node_id] = node_pos;
                 this.position_to_node_dict[node_pos] = node_id;
 
-                if (IS_DEBUG_MODE) Debug.Log("Made a node in " + node_pos);
+                new_node_id_list.Add(node_id);
 
                 return node_id;
             } else {
@@ -290,7 +346,7 @@ namespace Emulator_Backend {
             }
         }
 
-        private Vector3 Process_vector3(Vector3 input) {
+        private Vector3 Process_vector3(Vector3 input){
             return new Vector3(
                 (int)(input.x * 100) / 100.0f,
                 (int)(input.y * 100) / 100.0f,

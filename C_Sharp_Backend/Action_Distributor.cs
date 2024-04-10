@@ -4,13 +4,14 @@ using System.Text;
 using System.Threading;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using ICities;
 using UnityEngine;
 
 
 
 namespace Emulator_Backend{
 
-    public class Action_Distributor: MonoBehaviour{
+    public class Action_Distributor: MonoBehaviour, ILoadingExtension{
         private Http_Server http_server;
         private readonly Json_Utility json_utility = new Json_Utility();
 
@@ -38,7 +39,7 @@ namespace Emulator_Backend{
             }
         }
 
-        private void OnEnable() {
+        private void OnEnable() { //启动游戏
             foreach (var action in this.action_list){
                 action.On_enable();
             }
@@ -46,12 +47,36 @@ namespace Emulator_Backend{
             this.http_server = new Http_Server();
         }
 
-        private void OnDisable() {
+        void ILoadingExtension.OnCreated(ILoading loading) { // 开始载入存档
+            foreach (var action in this.action_list){
+                action.On_created();
+            }
+        }
+
+        void ILoadingExtension.OnLevelLoaded(LoadMode mode) { //完成载入存档
+            foreach (var action in this.action_list){
+                action.On_level_loaded();
+            }
+        }
+
+        void ILoadingExtension.OnLevelUnloading() { //开始退出存档
+            foreach (var action in this.action_list){
+                action.On_level_unloading();
+            }
+        }
+
+        void ILoadingExtension.OnReleased() { //退出存档完成
+            foreach (var action in this.action_list){
+                action.On_released();
+            }
+        }
+
+        private void OnDisable() { //退出游戏
             foreach (var action in this.action_list){
                 action.On_disable();
             }
 
-            this.http_server.On_Disable();
+            this.http_server.Stop_server();
         }
 
         private void FixedUpdate(){
@@ -123,7 +148,7 @@ namespace Emulator_Backend{
     }
 
     public class Http_Server{
-        private const string HTTP_PREFIX = "http://localhost:11451/";
+        private const string HTTP_PREFIX = "http://localhost:11453/";
 
         private readonly HttpListener http_listener;
         private readonly Thread http_listener_thread;
@@ -139,7 +164,7 @@ namespace Emulator_Backend{
             this.http_listener_thread.Start();
         }
 
-        public void On_Disable() {
+        public void Stop_server() {
             this.http_listener_thread.Abort();
             this.http_listener.Stop();
         }

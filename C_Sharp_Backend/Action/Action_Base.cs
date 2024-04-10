@@ -44,9 +44,17 @@ namespace Emulator_Backend{
             return string.IsNullOrEmpty(parameter_validity_message);
         }
 
-        public virtual void On_enable(){}
+        public virtual void On_enable(){}  //启动游戏
 
-        public virtual void On_disable(){}
+        public virtual void On_created(){} // 开始载入存档
+
+        public virtual void On_level_loaded(){} //完成载入存档
+
+        public virtual void On_level_unloading(){} //开始退出存档
+
+        public virtual void On_released(){} //退出退出存档完成
+
+        public virtual void On_disable(){} //退出游戏
     }
 
 }
