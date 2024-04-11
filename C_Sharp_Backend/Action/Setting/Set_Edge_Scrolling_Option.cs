@@ -10,7 +10,7 @@ namespace Emulator_Backend{
     public class Set_Edge_Scrolling_Option: Action_Base{
         const int DELAY_TIME = 25000; //milliseconds
 
-        private OptionsGameplayPanel options_gameplay_panel;
+        private OptionsGameplayPanel options_gameplay_panel = null;
 
         public Set_Edge_Scrolling_Option(){
             this.parameter_type_dict = new Dictionary<string, string>(){

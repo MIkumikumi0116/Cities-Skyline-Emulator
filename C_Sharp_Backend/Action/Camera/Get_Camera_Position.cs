@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Emulator_Backend{
 
     public class Get_Camera_Position: Action_Base{
-        private CameraController camera_controller;
+        private CameraController camera_controller = null;
 
         public Get_Camera_Position() {
             this.parameter_type_dict = new Dictionary<string, string>{
@@ -14,11 +14,11 @@ namespace Emulator_Backend{
             };
         }
 
-        public override void On_level_loaded(){
-            this.camera_controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
-        }
-
         public override Dictionary<string, object> Perform_action(Dictionary<string, object> action_param_dict){
+            if (this.camera_controller == null){
+                this.camera_controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
+            }
+
             if (!this.Check_parameter_validity(action_param_dict, out string parameter_validity_message)){
                 return new Dictionary<string, object> {
                     {"status", "error"},

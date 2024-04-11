@@ -5,7 +5,7 @@ def send(data):
     print(data)
 
     json_data = json.dumps(data)
-    response = requests.post("http://localhost:11452/", data = json_data, headers = {"Content-Type": "application/json"})
+    response = requests.post("http://localhost:11453/", data = json_data, headers = {"Content-Type": "application/json"})
     response_json = json.loads(response.text.replace('\ufeff', ''))
 
     print(response_json)
@@ -28,26 +28,28 @@ build_roads_test_case_1 = [
     ((200, 0), (400, 0)),
     ((400, 0), (600, 0)),
 
-    # ((100, -300), (100, 300)),
+    ((100, -300), (100, 300)),
+
+    ((-200, -200), (200, 200)),
 
 
-    # ((200, -300), (200, 0)),
-    # ((200, 0), (200, 300)),
+    ((200, -300), (200, 0)),
+    ((200, 0), (200, 300)),
 
-    # ((300, -300), (300, -20)),
-    # ((300, 20), (300, 300)),
-    # ((300, -20), (300, 20)),
+    ((300, -300), (300, -20)),
+    ((300, 20), (300, 300)),
+    ((300, -20), (300, 20)),
 
-    # ((400, 20), (400, -100)),
-    # ((400, 20), (400, -100)), # 完全重合的两条路径
+    ((400, 20), (400, -100)),
+    ((400, 20), (400, -100)), # 完全重合的两条路径
 
-    # ((400, 120), (400, -100)), # 部分重合的两条路径
-    # # 上面这个case有个bug，是因为segment部分重合的原因，不好修复
+    ((400, 120), (400, -100)), # 部分重合的两条路径
+    # 上面这个case有个bug，是因为segment部分重合的原因，不好修复
 
-    # ((0, 0), (600, 0)),
+    ((0, 0), (600, 0)),
 
-    # ((0, 100), (600, -100)), # 左上 -> 右下
-    # ((0, -200), (500, 300)), # 左下 -> 右上
+    ((0, 100), (600, -100)), # 左上 -> 右下
+    ((0, -200), (500, 300)), # 左下 -> 右上
 ]
 
 data = {
@@ -116,6 +118,12 @@ data = {
 #     "action": "Set_Edge_Scrolling_Option",
 #     "is_enable": False,
 # }
+
+# data = {
+#     "action": "Get_Camera_Position"
+# }
+
+# send(data)
 
 build_roads(build_roads_test_case_1)
 

@@ -91,6 +91,42 @@ namespace Emulator_Backend {
 
             return intersection_point;
         }
+        public static float Get_intersection_angel(Point p1, Point p2, Point q1, Point q2) { // 求两线段夹角
+            // 方向向量
+            var vector_1 = new Point(p2.X_pos - p1.X_pos, p2.Z_pos - p1.Z_pos);
+            var vector_2 = new Point(q2.X_pos - q1.X_pos, q2.Z_pos - q1.Z_pos);
+
+            // 如果线段相连，反向第一个方向向量，算两个线段的夹角而不是交叉角
+            var connected_flag = false;
+            if ((p2.X_pos == q1.X_pos && p2.Z_pos == q1.Z_pos) || (p1.X_pos == q2.X_pos && p1.Z_pos == q2.Z_pos)) {
+                connected_flag = true;
+            }
+            if (connected_flag){
+                vector_1 = new Point(-vector_1.X_pos, -vector_1.Z_pos);
+            }
+
+            // 点积和模长
+            var dot_product = vector_1.X_pos * vector_2.X_pos + vector_1.Z_pos * vector_2.Z_pos;
+            var magnitude_1 = (float)Math.Sqrt(vector_1.X_pos * vector_1.X_pos + vector_1.Z_pos * vector_1.Z_pos);
+            var magnitude_2 = (float)Math.Sqrt(vector_2.X_pos * vector_2.X_pos + vector_2.Z_pos * vector_2.Z_pos);
+
+            // 计算夹角的余弦值
+            var cos_theta = dot_product / (magnitude_1 * magnitude_2);
+
+            // 限制cosTheta的范围在[-1, 1]内
+            cos_theta = Math.Max(Math.Min(cos_theta, 1), -1);
+
+            // 计算角度
+            var theta_radians = (float)Math.Acos(cos_theta);
+            var theta_degrees = (float)(theta_radians * (180.0 / Math.PI));
+
+            // 获取锐角
+            if (!connected_flag){
+                var acute_angle = Math.Min(theta_degrees, 180 - theta_degrees);
+            }
+
+            return theta_degrees;
+        }
 
         public override bool Equals(object obj) {
             return(
