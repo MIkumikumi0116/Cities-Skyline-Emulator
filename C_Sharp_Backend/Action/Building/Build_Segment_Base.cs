@@ -12,8 +12,6 @@ namespace Emulator_Backend {
         // const float MIN_NODE_DISTANCE = 24;  // 两个node之间的最小距离，新添加node离已有node的距离小于这个值时，合并为一个node
         const float MIN_SEGMENT_ANGLE = 30;  // 两个segment之间的最小夹角，新添加segment与已有segment的夹角小于这个值时，报错
 
-        // private readonly bool IS_DEBUG_MODE = true;
-
         private NetManager        net_manager        = null;
         private TerrainManager    terrain_manager    = null;
         private SimulationManager simulation_manager = null;
@@ -237,12 +235,12 @@ namespace Emulator_Backend {
                     intersection_flag = true;
                 }
 
-                if (overlap_flag || intersection_flag){
-                    if (Point.Get_intersection_angel(start_point, end_point, node_1_point, node_2_point) < Build_Segment_Base.MIN_SEGMENT_ANGLE){
-                        error_message = "The angle with the existing road is too small.";
-                        return false;
-                    }
-                }
+                // if (overlap_flag || intersection_flag){
+                //     if (Point.Get_intersection_angel(start_point, end_point, node_1_point, node_2_point) < Build_Segment_Base.MIN_SEGMENT_ANGLE){
+                //         error_message = "The angle with the existing road is too small.";
+                //         return false;
+                //     }
+                // }
 
                 if (intersection_flag){
                     var intersection_point = Point.Get_intersection_point(start_point, end_point, node_1_point, node_2_point); // 相交，求交点

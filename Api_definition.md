@@ -175,3 +175,13 @@ Specify horizontal and pitch angles (in world coordinates) to rotate the camera 
 - response parameter
   - status: string, "ok" or "error"
   - message: string, succeed: "success"; failed: error message
+
+## Screen Shot
+### Get_Screen_Shot
+Capture a complete screenshot of the game, including the scenery and UI.
+- request parameter
+  - action: string, "Get_Screen_Shot"
+- response parameter
+  - status: string, "ok" or "error"
+  - message: string, succeed: "success"; failed: error message
+  - screen_shot_base64: string, base64 encoding of a png image.

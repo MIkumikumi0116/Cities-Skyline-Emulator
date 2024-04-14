@@ -29,6 +29,9 @@ namespace Emulator_Backend{
             new Move_Camera(),
             new Rotate_Camera(),
 
+            // Screen Shot
+            new Get_Screen_Shot(),
+
             // Setting
             new Set_Edge_Scrolling_Option()
         };
@@ -148,7 +151,7 @@ namespace Emulator_Backend{
     }
 
     public class Http_Server{
-        private const string HTTP_PREFIX = "http://localhost:11453/";
+        private const string HTTP_PREFIX = "http://localhost:11451/";
 
         private readonly HttpListener http_listener;
         private readonly Thread http_listener_thread;
