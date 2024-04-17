@@ -33,7 +33,10 @@ namespace Emulator_Backend{
             new Get_Screen_Shot(),
 
             // Setting
-            new Set_Edge_Scrolling_Option()
+            new Set_Edge_Scrolling_Option(),
+
+            // Zone
+            new Select_Zone()
         };
 
         public Action_Distributor(){

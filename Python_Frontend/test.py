@@ -23,9 +23,9 @@ from PIL import Image
 #     'prefab_id': 1
 # }
 
-data = {
-    'action': 'Get_Camera_Position'
-}
+# data = {
+#     'action': 'Get_Camera_Position'
+# }
 
 # data = {
 #     'action': 'Get_Camera_Rotation'
@@ -69,6 +69,15 @@ data = {
 # data = {
 #     'action': 'Get_Screen_Shot',
 # }
+
+data = {
+    'action': 'Select_Zone',
+    'start_pos_x': -100,
+    'start_pos_z': -100,
+    'end_pos_x': 100,
+    'end_pos_z': 100,
+    'zone_type': 5
+}
 
 def send(data):
     print(data)
