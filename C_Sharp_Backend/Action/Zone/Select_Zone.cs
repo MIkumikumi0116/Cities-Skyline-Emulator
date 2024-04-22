@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using C_Sharp_Backend.Action.Zone;
 using ColossalFramework;
 using ColossalFramework.Math;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace Emulator_Backend{
         private ZoneManager       zone_manager       = null;
         private CameraController  camera_controller  = null;
         private SimulationManager simulation_manager = null;
+        private OZoneTool oZoneTool = null;
 
         private float start_pos_x;
         private float start_pos_z;
@@ -51,7 +53,17 @@ namespace Emulator_Backend{
             this.end_pos_z   = Convert.ToSingle(action_param_dict["end_pos_z"]);
             this.zone_type   = Convert.ToInt32(action_param_dict["zone_type"]);
 
-            Singleton<SimulationManager>.instance.AddAction(Select_zone_performance_());
+            if (oZoneTool == null)
+            {
+                oZoneTool = GameObject.FindObjectOfType<OZoneTool>();
+            }
+            oZoneTool.m_startPosition = new Vector3(this.start_pos_x, 0, this.start_pos_z);
+            oZoneTool.m_mousePosition = new Vector3(this.end_pos_x, 0, this.end_pos_z);
+            oZoneTool.m_startDirection = Vector3.forward;
+            oZoneTool.m_zoning = true;
+            oZoneTool.m_zone = (ItemClass.Zone)this.zone_type;
+            oZoneTool.ApplyZoning();
+            // Singleton<SimulationManager>.instance.AddAction(Select_zone_performance_());
 
             // this.Select_zone_performance_(start_pos_x, start_pos_z, end_pos_x, end_pos_z, zone_type);
 
