@@ -63,6 +63,7 @@
     <Compile Include="Action\Camera\Set_Camera_Rotation.cs" />
     <Compile Include="Action\Screen_Shot\Get_Screen_Shot.cs" />
     <Compile Include="Action\Setting\Set_Edge_Scrolling_Option.cs" />
+    <Compile Include="Action\Zone\OZoneTool.cs" />
     <Compile Include="Action\Zone\Select_Zone.cs" />
     <Compile Include="Action_Distributor.cs" />
     <Compile Include="Emulator_Backend.cs" />
