@@ -76,7 +76,7 @@ data = {
     'start_pos_z': -100,
     'end_pos_x': 100,
     'end_pos_z': 100,
-    'zone_type': 5
+    'zone_type': 3
 }
 
 def send(data):
