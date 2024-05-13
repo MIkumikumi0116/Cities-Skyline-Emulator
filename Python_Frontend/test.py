@@ -4,14 +4,12 @@ import base64
 import requests
 from PIL import Image
 
-
-
 # data = {
 #     'action': 'Build_Straight_Road',
 #     'start_x': 0,
-#     'start_z': -200,
-#     'end_x': 500,
-#     'end_z': 300,
+#     'start_z': 0,
+#     'end_x': 100,
+#     'end_z': 100,
 #     'prefab_id': 89
 # }
 
