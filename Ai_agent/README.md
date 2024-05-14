@@ -189,7 +189,7 @@ Sample config for an OpenAI provider:
 
 ### 1. Change windows settings before running the code.
 
-![image-20240508171740392](.\image-20240508171740392.png)
+![image-20240508171740392](image-20240508171740392.png)
 
 ## Getting Started
 
