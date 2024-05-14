@@ -1,0 +1,18 @@
+{
+  "type": "success_detection",
+  "task_description": "Assess the impact of recent urban development actions on city growth and citizen satisfaction.",
+  "previous_action": "Implemented a new public transportation system to reduce traffic congestion.",
+  "previous_reasoning": "The city was facing severe traffic issues, and a new public transportation system was expected to alleviate some of that congestion.",
+  "image_introduction": [
+    {
+      "introduction": "This screenshot shows the city before the new transportation system was implemented.",
+      "path": "./res/prompts/testing/urban_planning/transportation/before.jpg",
+      "assistant": ""
+    },
+    {
+      "introduction": "This screenshot shows the city after the new transportation system has been implemented.",
+      "path": "./res/prompts/testing/urban_planning/transportation/after.jpg",
+      "assistant": ""
+    }
+  ]
+}

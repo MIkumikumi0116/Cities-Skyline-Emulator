@@ -1,0 +1,12 @@
+{
+  "type": "screen_classification",
+  "classes": [
+    "zoning",
+    "traffic_management",
+    "public_services",
+    "city_budget",
+    "policies",
+    "chirper_alerts",
+    "city_statistics"
+  ]
+}

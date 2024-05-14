@@ -1,0 +1,36 @@
+{
+  "type": "gather_information",
+  "image_introduction": [
+    {
+      "introduction": "This is a screenshot of the current moment in 'Cities: Skylines'.",
+      "path": "./res/samples/city_screenshot.png",
+      "assistant": "The screenshot displays various city elements such as residential zones, traffic flow, and public services."
+    }
+  ],
+  "few_shots": [
+    {
+      "introduction": "This is an example: The residential zone has a high density and requires more public services.",
+      "path": "./res/samples/few_shot_residential_high_density.jpg",
+      "assistant": "Yes, the residential zone is densely populated and would benefit from additional public services."
+    },
+    {
+      "introduction": "This is an example: The industrial zone is causing pollution and affecting nearby residential areas.",
+      "path": "./res/samples/few_shot_industrial_pollution.jpg",
+      "assistant": "Yes, the industrial pollution is impacting the residential quality of life and needs to be managed."
+    },
+    {
+      "introduction": "This is an example: The commercial zone is thriving but has traffic congestion issues.",
+      "path": "./res/samples/few_shot_commercial_traffic.jpg",
+      "assistant": "Yes, the commercial area is busy, and traffic management solutions are necessary to improve flow."
+    }
+  ],
+  "information_type": [
+    "City_status",
+    "Notification",
+    "Environment_information",
+    "Action_guidance",
+    "Task_guidance",
+    "Dialogue",
+    "Others"
+  ]
+}

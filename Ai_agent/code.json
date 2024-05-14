@@ -1,0 +1,22 @@
+[
+  {
+    "name": "move_forward",
+    "code": "def move_forward(duration):\n    \"\"\"\n    Moves the camera forward in the game at a specified distance.\n\n    Parameters:\n    - duration: The duration in seconds for which the character should move forward.\n    \"\"\"\n    data = {'action': 'Move_Camera',     'pos_x': 100,     'pos_y': 0,     'pos_z': 0,     'relative_to_camera': True }\n    send(data)\n",
+    "code_description": "This code defines a function called move_forward, which moves the camera forward in the game for a specified duration."
+  },
+  {
+    "name": "move_back",
+    "code": "def move_back(duration):\n    \"\"\"\n    Moves the camera backward in the game at a specified distance.\n\n    Parameters:\n    - duration: The duration in seconds for which the character should move backward.\n    \"\"\"\n    data = {'action': 'Move_Camera',     'pos_x': -100,     'pos_y': 0,     'pos_z': 0,     'relative_to_camera': True }\n    send(data)\n",
+    "code_description": "This code defines a function called move_back, which moves the camera backward in the game for a specified duration."
+  },
+  {
+    "name": "move_left",
+    "code": "def move_left(duration):\n    \"\"\"\n    Moves the camera to the left in the game at a specified distance.\n\n    Parameters:\n    - duration: The duration in seconds for which the character should move to the left.\n    \"\"\"\n    data = {'action': 'Move_Camera',     'pos_x': 0,     'pos_y': 0,     'pos_z': -100,     'relative_to_camera': True }\n    send(data)\n",
+    "code_description": "This code defines a function called move_left, which moves the camera to the left in the game for a specified duration."
+  },
+  {
+    "name": "move_right",
+    "code": "def move_right(duration):\n    \"\"\"\n    Moves the camera to the right in the game at a specified distance.\n\n    Parameters:\n    - duration: The duration in seconds for which the character should move to the right.\n    \"\"\"\n    data = {'action': 'Move_Camera',     'pos_x': 0,     'pos_y': 0,     'pos_z': 100,     'relative_to_camera': True }\n    send(data)\n",
+    "code_description": "This code defines a function called move_right, which moves the camera to the right in the game for a specified duration."
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "task_description": "Assess the current state of the city's development and identify areas that require attention or improvement.",
+  "image_introduction": [
+    {
+      "introduction": "This is a screenshot of the current moment in the city simulation game 'Cities: Skylines'.",
+      "path": "./res/samples/city_screenshot.png",
+      "assistant": "The screenshot shows a well-developed residential area with a high demand for commercial zones. There is also a notification about traffic congestion near the industrial sector that needs to be addressed."
+    }
+  ]
+}
