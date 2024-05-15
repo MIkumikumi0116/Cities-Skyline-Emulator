@@ -46,7 +46,7 @@ import requests
 from PIL import Image
 
 config = Config()
-logger = Logger()
+logger_w = Logger()
 io_env = IOEnvironment()
 game_api=GameApiProvider()
 
@@ -105,7 +105,7 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
 
         try:
             # Gather information preparation
-            logger.write(f'Gather Information Start Frame ID: {start_frame_id}, End Frame ID: {end_frame_id}')
+            logger_w.write(f'Gather Information Start Frame ID: {start_frame_id}, End Frame ID: {end_frame_id}')
             input = planner.gather_information_.input_map
             text_input = planner.gather_information_.text_input_map
             video_clip_path = videocapture.get_video(start_frame_id,end_frame_id)
@@ -139,7 +139,7 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
             input["text_input"] = text_input
 
             # >> Calling INFORMATION GATHERING
-            logger.write(f'>> Calling INFORMATION GATHERING')
+            logger_w.write(f'>> Calling INFORMATION GATHERING')
             data = planner.gather_information(input=input)
 
             # Any information from the gathered_information_JSON
@@ -148,7 +148,7 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
             if gathered_information_JSON is not None:
                 gathered_information=gathered_information_JSON.data_structure
             else:
-                logger.warn("NO data_structure in gathered_information_JSON")
+                logger_w.warn("NO data_structure in gathered_information_JSON")
                 gathered_information = dict()
 
             # Sort the gathered_information by timestamp
@@ -167,7 +167,7 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
                 else:
                     long_horizon = False
             else:
-                logger.warn(f"No {constants.LAST_TASK_GUIDANCE} in response.")
+                logger_w.warn(f"No {constants.LAST_TASK_GUIDANCE} in response.")
                 last_task_guidance = ""
                 long_horizon = False
 
@@ -178,7 +178,7 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
                 else:
                     screen_classification="None"
             else:
-                logger.warn(f"No {constants.IMAGE_DESCRIPTION} in response.")
+                logger_w.warn(f"No {constants.IMAGE_DESCRIPTION} in response.")
                 image_description="No description"
                 screen_classification="None"
 
@@ -190,7 +190,7 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
                 target_object_name=data['res_dict'][constants.TARGET_OBJECT_NAME]
                 object_name_reasoning=data['res_dict'][constants.GATHER_INFO_REASONING]
             else:
-                logger.write("> No target object")
+                logger_w.write("> No target object")
                 target_object_name = ""
                 object_name_reasoning=""
 
@@ -211,18 +211,18 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
             else:
                 memory.add_recent_history(key=constants.AUGMENTED_IMAGES_MEM_BUCKET, info=constants.NO_IMAGE)
 
-            logger.write(f'Image Description: {image_description}')
-            logger.write(f'Object Name: {target_object_name}')
-            logger.write(f'Reasoning: {object_name_reasoning}')
-            logger.write(f'Screen Classification: {screen_classification}')
+            logger_w.write(f'Image Description: {image_description}')
+            logger_w.write(f'Object Name: {target_object_name}')
+            logger_w.write(f'Reasoning: {object_name_reasoning}')
+            logger_w.write(f'Screen Classification: {screen_classification}')
 
-            logger.write(f'Dialogue: {all_dialogue}')
-            logger.write(f'Gathered Information: {gathered_information}')
-            logger.write(f'Classification Reasons: {classification_reasons}')
-            logger.write(f'All Task Guidance: {all_task_guidance}')
-            logger.write(f'Last Task Guidance: {last_task_guidance}')
-            logger.write(f'Long Horizon: {long_horizon}')
-            logger.write(f'Generated Actions: {all_generated_actions}')
+            logger_w.write(f'Dialogue: {all_dialogue}')
+            logger_w.write(f'Gathered Information: {gathered_information}')
+            logger_w.write(f'Classification Reasons: {classification_reasons}')
+            logger_w.write(f'All Task Guidance: {all_task_guidance}')
+            logger_w.write(f'Last Task Guidance: {last_task_guidance}')
+            logger_w.write(f'Long Horizon: {long_horizon}')
+            logger_w.write(f'Generated Actions: {all_generated_actions}')
 
             if use_self_reflection and start_frame_id > -1:
                 input = planner.self_reflection_.input_map
@@ -266,7 +266,7 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
                     input['executing_action_error']  = ""
 
                 # >> Calling SELF REFLECTION
-                logger.write(f'>> Calling SELF REFLECTION')
+                logger_w.write(f'>> Calling SELF REFLECTION')
                 reflection_data = planner.self_reflection(input = input)
 
                 if 'reasoning' in reflection_data['res_dict'].keys():
@@ -276,13 +276,13 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
                 pre_self_reflection_reasoning = self_reflection_reasoning
 
                 memory.add_recent_history("self_reflection_reasoning", self_reflection_reasoning)
-                logger.write(f'Self-reflection reason: {self_reflection_reasoning}')
+                logger_w.write(f'Self-reflection reason: {self_reflection_reasoning}')
 
             if last_task_guidance:
                 task_description = last_task_guidance
                 memory.add_task_guidance(last_task_guidance, long_horizon)
 
-            logger.write(f'Current Task Guidance: {task_description}')
+            logger_w.write(f'Current Task Guidance: {task_description}')
 
             if config.skill_retrieval:
                 for extracted_skills in all_generated_actions:
@@ -291,7 +291,7 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
                         gm.add_new_skill(skill_code=extracted_skill['code'])
 
                 skill_library = gm.retrieve_skills(query_task = task_description, skill_num = config.skill_num, screen_type = screen_classification.lower())
-                logger.write(f'skill_library: {skill_library}')
+                logger_w.write(f'skill_library: {skill_library}')
                 skill_library = gm.get_skill_information(skill_library)
             logger.info("skill_library:",skill_library)
             videocapture.clear_frame_buffer()
@@ -344,7 +344,7 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
             # Minimap info tracking
             if constants.MINIMAP_INFORMATION in response_keys:
                 minimap_information = data["res_dict"][constants.MINIMAP_INFORMATION]
-                logger.write(f"{constants.MINIMAP_INFORMATION}: {minimap_information}")
+                logger_w.write(f"{constants.MINIMAP_INFORMATION}: {minimap_information}")
 
                 minimap_info_str = ""
                 for key, value in minimap_information.items():
@@ -353,7 +353,7 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
                             minimap_info_str = minimap_info_str + key + ' ' + str(index) + ': angle '  + str(int(item['theta'])) + ' degree' + '\n'
                 minimap_info_str = minimap_info_str.rstrip('\n')
 
-                logger.write(f'minimap_info_str: {minimap_info_str}')
+                logger_w.write(f'minimap_info_str: {minimap_info_str}')
                 input[constants.MINIMAP_INFORMATION] = minimap_info_str
 
             data = planner.decision_making(input = input)
@@ -362,7 +362,7 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
             if skill_steps is None:
                 skill_steps = []
 
-            logger.write(f'R: {skill_steps}')
+            logger_w.write(f'R: {skill_steps}')
 
             # Filter nop actions in list
             skill_steps = [ i for i in skill_steps if i != '']
@@ -370,7 +370,7 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
                 skill_steps = ['']
 
             skill_steps = skill_steps[:number_of_execute_skills]
-            logger.write(f'Skill Steps: {skill_steps}')
+            logger_w.write(f'Skill Steps: {skill_steps}')
 
             gm.unpause_game()
 
@@ -399,12 +399,12 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
             memory.add_recent_history("decision_making_reasoning", pre_decision_making_reasoning)
 
             # For such cases with no expected response, we should define a retry limit
-            logger.write(f'Decision reasoning: {pre_decision_making_reasoning}')
+            logger_w.write(f'Decision reasoning: {pre_decision_making_reasoning}')
 
             # Information summary preparation
             if use_information_summary and len(memory.get_recent_history("decision_making_reasoning", memory.max_recent_steps)) == memory.max_recent_steps:
                 input = planner.information_summary_.input_map
-                logger.write(f'> Information summary call...')
+                logger_w.write(f'> Information summary call...')
                 images = memory.get_recent_history('image', config.event_count)
                 reasonings = memory.get_recent_history('decision_making_reasoning', config.event_count)
                 image_introduction = [{"path": images[event_i],"assistant": "","introduction": 'This is the {} screenshot of recent events. The description of this image: {}'.format(['first','second','third','fourth','fifth'][event_i], reasonings[event_i])} for event_i in range(config.event_count)]
@@ -415,13 +415,13 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
                 input["event_count"] = str(config.event_count)
 
                 # >> Calling INFORMATION SUMMARY
-                logger.write(f'>> Calling INFORMATION SUMMARY')
+                logger_w.write(f'>> Calling INFORMATION SUMMARY')
 
                 data = planner.information_summary(input = input)
                 info_summary = data['res_dict']['info_summary']
                 entities_and_behaviors = data['res_dict']['entities_and_behaviors']
-                logger.write(f'R: Summary: {info_summary}')
-                logger.write(f'R: entities_and_behaviors: {entities_and_behaviors}')
+                logger_w.write(f'R: Summary: {info_summary}')
+                logger_w.write(f'R: entities_and_behaviors: {entities_and_behaviors}')
                 memory.add_summarization(info_summary)
 
             memory.add_recent_history("image", cur_screen_shot_path)
@@ -448,7 +448,7 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
                 input["previous_reasoning"] = memory.get_recent_history("decision_making_reasoning", k=1)[-1]
 
                 # >> Calling SUCCESS DETECTION
-                logger.write(f'>> Calling SUCCESS DETECTION')
+                logger_w.write(f'>> Calling SUCCESS DETECTION')
                 data = planner.success_detection(input = input)
 
                 success = data['res_dict']['success']
@@ -457,15 +457,15 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
 
                 memory.add_recent_history("success_detection_reasoning", success_reasoning)
 
-                logger.write(f'Success: {success}')
-                logger.write(f'Success criteria: {success_criteria}')
-                logger.write(f'Success reason: {success_reasoning}')
+                logger_w.write(f'Success: {success}')
+                logger_w.write(f'Success criteria: {success_criteria}')
+                logger_w.write(f'Success reason: {success_reasoning}')
 
             gm.store_skills()
             memory.save()
 
         except KeyboardInterrupt:
-            logger.write('KeyboardInterrupt Ctrl+C detected, exiting.')
+            logger_w.write('KeyboardInterrupt Ctrl+C detected, exiting.')
             gm.cleanup_io()
             videocapture.finish_capture()
             break

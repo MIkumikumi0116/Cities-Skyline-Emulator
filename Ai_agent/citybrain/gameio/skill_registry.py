@@ -395,7 +395,7 @@ class SkillRegistry:
 
 
     def convert_str_to_func(self, skill_name, skill_local):
-        logger.info(skill_local[skill_name][SKILL_CODE_KEY])
+        #logger.info(skill_local[skill_name][SKILL_CODE_KEY])
         exec(skill_local[skill_name][SKILL_CODE_KEY])
         skill = eval(skill_name)
         return skill

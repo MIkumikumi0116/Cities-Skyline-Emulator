@@ -31,9 +31,10 @@ from  citybrain.utils.encoding_utils import encode_base64, decode_base64
 from  citybrain.utils.file_utils import assemble_project_path
 from  citybrain.utils.string_utils import hash_text_sha256
 import google.generativeai as genai
+from loguru import logger
 
 config = Config()
-logger = Logger()
+logger_w = Logger()
 
 MAX_TOKENS = {
     "gpt-3.5-turbo-0301": 4097,
@@ -177,7 +178,7 @@ class OpenAIProvider(LLMProvider, EmbeddingProvider):
         try:
             encoding = tiktoken.encoding_for_model(model_name)
         except KeyError:
-            logger.warn("Warning: model not found. Using cl100k_base encoding.")
+            logger_w.warn("Warning: model not found. Using cl100k_base encoding.")
             model = "cl100k_base"
             encoding = tiktoken.get_encoding(model)
         for i, text in enumerate(texts):
@@ -304,11 +305,11 @@ class OpenAIProvider(LLMProvider, EmbeddingProvider):
 
         if model is None:
             model = self.llm_model
-
+        logger.info("start requesting completion")
         if config.debug_mode:
-            logger.debug(f"Creating chat completion with model {model}, temperature {temperature}, max_tokens {max_tokens}")
+            logger_w.debug(f"Creating chat completion with model {model}, temperature {temperature}, max_tokens {max_tokens}")
         else:
-            logger.write(f"Requesting {model} completion...")
+            logger_w.write(f"!!!!Requesting {model} completion...")
 
         @backoff.on_exception(
             backoff.constant,
@@ -343,11 +344,12 @@ class OpenAIProvider(LLMProvider, EmbeddingProvider):
                 temperature=temperature,
                 seed=seed,
                 max_tokens=max_tokens,)
-                print("this is response:",response)
+                #logger.info("this is response:",response)
 
             if response is None:
-                logger.error("Failed to get a response from OpenAI. Try again.")
-                logger.double_check()
+                logger_w.error("Failed to get a response from OpenAI. Try again.")
+                logger_w.double_check()
+
 
             message = response.choices[0].message.content
 
@@ -357,8 +359,8 @@ class OpenAIProvider(LLMProvider, EmbeddingProvider):
                 "total_tokens" : response.usage.total_tokens,
                 "system_fingerprint" : response.system_fingerprint,
             }
-
-            logger.write(f'Response received from {model}.')
+            logger.info("this is Response1:", response)
+            logger_w.write(f'Response1 received from {model}.')
 
             return message, info
 
@@ -381,12 +383,12 @@ class OpenAIProvider(LLMProvider, EmbeddingProvider):
 
         if model is None:
             model = self.llm_model
-
+        logger.info("Creating completion1")
         if config.debug_mode:
-            logger.debug(
+            logger_w.debug(
                 f"Creating chat completion with model {model}, temperature {temperature}, max_tokens {max_tokens}")
         else:
-            logger.write(f"Requesting {model} completion...")
+            logger_w.write(f"?????Requesting {model} completion...")
 
         @backoff.on_exception(
             backoff.constant,
@@ -426,8 +428,8 @@ class OpenAIProvider(LLMProvider, EmbeddingProvider):
                 )
 
             if response is None:
-                logger.error("Failed to get a response from OpenAI. Try again.")
-                logger.double_check()
+                logger_w.error("Failed to get a response from OpenAI. Try again.")
+                logger_w.double_check()
 
             message = response.choices[0].message.content
 
@@ -437,8 +439,8 @@ class OpenAIProvider(LLMProvider, EmbeddingProvider):
                 "total_tokens": response.usage.total_tokens,
                 "system_fingerprint": response.system_fingerprint,
             }
-
-            logger.write(f'Response received from {model}.')
+            logger.info("this is Response2:", response)
+            logger_w.write(f'Response2 received from {model}.')
 
             return message, info
 
@@ -458,7 +460,7 @@ class OpenAIProvider(LLMProvider, EmbeddingProvider):
         try:
             encoding = tiktoken.encoding_for_model(model)
         except KeyError:
-            logger.debug("Warning: model not found. Using cl100k_base encoding.")
+            logger_w.debug("Warning: model not found. Using cl100k_base encoding.")
             encoding = tiktoken.get_encoding("cl100k_base")
         if model in {
             "gpt-4-1106-vision-preview",
@@ -707,7 +709,7 @@ def encode_image_binary(image_binary, image_path=None):
     if image_path is None:
         image_path = '<$bin_placeholder$>'
 
-    logger.debug(f'|>. img_hash {hash_text_sha256(encoded_image)}, path {image_path} .<|')
+    logger_w.debug(f'|>. img_hash {hash_text_sha256(encoded_image)}, path {image_path} .<|')
     return encoded_image
 
 
