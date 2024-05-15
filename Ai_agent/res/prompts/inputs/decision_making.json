@@ -1,0 +1,71 @@
+{
+  "type": "decision_making",
+  "task_description": "",
+  "skill_library": "",
+  "decision_making_memory_description": "",
+  "gathered_information_description": "",
+  "info_summary": "",
+  "number_of_execute_skills": 1,
+  "previous_action": "",
+  "previous_reasoning": "",
+  "few_shots": [
+    {
+      "introduction": "Here are some examples of zoning areas in the city.",
+      "path": "",
+      "assistant": ""
+    },
+    {
+      "introduction": "This is an example: The residential zone is clearly marked and separated from the industrial zone.",
+      "path": "./res/samples/few_shot_residential.jpg",
+      "assistant": "Yes, the residential zone is clearly separated."
+    },
+    {
+      "introduction": "This is an example: The commercial zone is slightly overlapping with the residential area.",
+      "path": "./res/samples/few_shot_commercial.jpg",
+      "assistant": "Yes, there is a slight overlap with the residential area."
+    },
+    {
+      "introduction": "This is an example: The industrial zone is clearly on the outskirts of the city.",
+      "path": "./res/samples/few_shot_industrial.jpg",
+      "assistant": "Yes, it is clearly on the outskirts."
+    },
+    {
+      "introduction": "This is an example: The green space is central to the city layout.",
+      "path": "./res/samples/few_shot_green_space.jpg",
+      "assistant": "Yes, it is centrally located."
+    }
+  ],
+  "image_introduction": [
+    {
+      "introduction": "Now, I will give you five screenshots for decision making regarding city planning.",
+      "path": "",
+      "assistant": ""
+    },
+    {
+      "introduction": "This screenshot shows the city five steps before the current city development stage.",
+      "path": "",
+      "assistant": ""
+    },
+    {
+      "introduction": "This screenshot shows the city three steps before the current city development stage.",
+      "path": "",
+      "assistant": ""
+    },
+    {
+      "introduction": "This screenshot shows the city two steps before the current city development stage.",
+      "path": "",
+      "assistant": ""
+    },
+    {
+      "introduction": "This screenshot shows the previous step of city development.",
+      "path": "",
+      "assistant": ""
+    },
+    {
+      "introduction": "This screenshot shows the current step of city development.",
+      "path": "",
+      "resolution": "high",
+      "assistant": ""
+    }
+  ]
+}

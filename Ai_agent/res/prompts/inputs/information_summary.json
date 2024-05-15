@@ -1,0 +1,32 @@
+{
+  "task_description": "Your task is to manage the city's development effectively.",
+  "previous_summarization": "This is the current state of your city in Cities: Skylines.",
+  "event_count": "5",
+  "image_introduction": [
+    {
+      "introduction": "the first image shows the initial layout of your city's residential area",
+      "path": "./res/prompts/testing/decision_making/city_layout/screenshots/1.jpg",
+      "assistant": ""
+    },
+    {
+      "introduction": "the second image displays the expansion of the commercial zone",
+      "path": "./res/prompts/testing/decision_making/city_layout/screenshots/2.jpg",
+      "assistant": ""
+    },
+    {
+      "introduction": "the third image highlights the development of the industrial sector",
+      "path": "./res/prompts/testing/decision_making/city_layout/screenshots/3.jpg",
+      "assistant": ""
+    },
+    {
+      "introduction": "the fourth image captures the implementation of public services",
+      "path": "./res/prompts/testing/decision_making/city_layout/screenshots/4.jpg",
+      "assistant": ""
+    },
+    {
+      "introduction": "the fifth image shows the current traffic flow and infrastructure",
+      "path": "./res/prompts/testing/decision_making/city_layout/screenshots/5.jpg",
+      "assistant": ""
+    }
+  ]
+}

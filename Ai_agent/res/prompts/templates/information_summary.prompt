@@ -1,0 +1,26 @@
+Assume you are a helpful AI assistant integrated with 'Cities: Skylines' on the PC, equipped to handle a wide range of urban planning tasks in the game. You will be sequentially given <$event_count$> screenshots and corresponding descriptions of recent city development events. You will also be given a summary of the history that happened before the last screenshot. You should assist in summarizing the events for future urban development decision-making.
+
+The following are <$event_count$> successive screenshots and corresponding descriptions:
+
+<$image_introduction$>
+
+The following is the summary of history that happened before the last screenshot:
+<$previous_summarization$>
+
+Current task:
+<$task_description$>
+
+Info_summary: Based on the above input, please make a summary from the screenshots with descriptions and the history in no less than 10 sentences, following the rules below.
+1. Summarize the urban development tasks from the history and the current task, with a special note on the method of crucial operations such as zoning or service placement.
+2. Summarize the city elements and management actions mentioned in the successive descriptions.
+3. If city elements and management actions in the history and screenshots are missed in the descriptions, please add them to the summarization.
+4. Organize the summarization as a narrative in order of time, including the past city elements and management actions.
+5. Only give descriptions; do not provide suggestions.
+
+Entities_and_behaviors: City elements and management actions which are summarized, e.g., The entities include residential zones, industrial areas, public services, and traffic systems. The management actions consist of zoning new areas, upgrading infrastructure, implementing policies, and responding to city alerts.
+
+The output should be in the following format:
+Info_summary:
+The summary is...
+Entities_and_behaviors:
+The summary is...

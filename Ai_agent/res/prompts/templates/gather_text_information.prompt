@@ -1,0 +1,98 @@
+Assume you are a helpful AI assistant integrated with 'Cities: Skylines' on the PC, equipped to handle a wide range of urban planning tasks in the game. Your advanced capabilities enable you to process and interpret gameplay screenshots and other relevant city data.
+
+<$image_introduction$>
+
+Information: List all text prompts on the screenshot from the top to the bottom, even if the text prompt is one word.
+
+All information should be categorized into one or more kinds of <$information_type$>. If you think a piece of information is both "A" and "B" categories, you should write information in both "A" and "B" categories. For example, "click to zone residential area" could both be "Action Guidance" and "Task Guidance" categories.
+
+City_status: The helpful information to the current context in the game, such as the city budget, population, current policies, if there are any alerts, etc. This content should be pairs of status names and their values. For example, "budget: $100,000". If there is no on-screen text and no city status, only output "null".
+
+Environment_information: The information about the city's location, time, weather, etc. This content should be pairs of status names and their values. For example, "weather: sunny". If there is no on-screen text and environment information, only output "null".
+
+Notification: The game will give notifications showing the events in the city, such as zoning changes, service updates, policy enactments, and alerts. Besides, it also contains valuable notifications of the game's mechanisms, such as "Traffic flow is displayed in the lower left corner". The content must be the on-screen text. If there is no on-screen text or notification, only output "null".
+
+Task_guidance: The content should obey the following rules:
+    1. The content of task guidance must be an on-screen text prompt, including the menu and the general city interface.
+    2. The game will give guidance on what should be done to proceed with the city's development, for example, "expand the residential zone". This is task guidance.
+    3. The game will give guidance on how to perform a task using mouse clicks or keyboard keys, for example, "click to build road". This is task guidance.
+    4. If no on-screen text prompt or task guidance exists, only output "null". Never derive the task guidance from the dialogue or notifications.
+
+Action_guidance: The game will give guidance on how to perform a task using mouse clicks or keyboard keys; you must generate the code based on the on-screen text. The content of the code should obey the following code rules:
+    1. You should first identify the exact mouse click or keyboard key represented by the icon on the screenshot. 'Ent' refers to 'enter'. 'RM' refers to 'right mouse button'. 'LM' refers to 'left mouse button'. You should output the full name of the key in the code.
+    2. You should refer to different examples strictly based on the word used to control the key, such as 'use', 'hold', 'release', 'press', and 'click'.
+    3. If 'click' is in the prompt to control the mouse button, io_env.mouse_click('button', 2) must be used to act on it. Refer to Examples 1 and 2.
+    4. If there are multiple actions, io_env.action_sequence(['action1', 'action2'], [2, 3]) must be used to act on it. Refer to Example 3.
+    5. If 'hold' is in the prompt to control the keyboard key, it means keeping the key held with io_env.key_hold (usually indefinitely, with no duration). If you need to hold it briefly, specify a duration argument. Refer to Example 4.
+    6. All durations are set to a minimum of 2 seconds by default. You can choose a longer or shorter duration. If it should be indefinite, do not specify a duration argument.
+    7. The name of the created function should only use phrasal verbs, verbs, nouns, or adverbs shown in the prompt and should be in the verb+noun or verb+adverb format, such as build_road, increase_budget, and enact_policy. Note that words that do not show in the prompt are prohibited.
+
+This is Example 1. If "click" is in the prompt and the text prompt on the screenshot is "click to build road", your output should be:
+ python
+ def build_road():
+    """
+    click to build road
+    """
+    io_env.mouse_click('left mouse button', 2)
+
+This is Example 2. If the instructions involve the keyboard and the text prompt on the screenshot is "press ENTER to open budget panel", your output should be:
+python
+def open_budget_panel():
+    """
+    press "enter" to open budget panel
+    """
+    io_env.key_press('enter', 2)
+
+This is Example 3. If "click" is in the prompt and the text prompt on the screenshot is "click to select zone, then click to place zone", your output should be:
+python
+def select_and_place_zone():
+    """
+    click to select zone, then click to place zone
+    """
+    io_env.action_sequence(['mouse_click', 'mouse_click'], ['left mouse button', 'left mouse button'], [2, 2])
+
+This is Example 4. If "hold" is in the prompt and the text prompt on the screenshot is "hold SHIFT to multi-select", your output should be:
+python
+def multi_select():
+    """
+    hold "shift" to multi-select
+    """
+    io_env.key_hold('shift')
+
+Dialogue: Conversations between characters in the game. This content should be in the format of "character name: dialogue". For example, "Mayor: We need more residential areas". If there is no on-screen text or dialogue, only output "null".
+
+Other: Other information that does not belong to the above categories. If there is no on-screen text, only output "null".
+
+Reasoning: The reasons for classification for each piece of information.
+If the on-screen text prompt is an instruction on how to perform a task using mouse clicks or keyboard keys, it should also be classified as action guidance and task guidance.
+For action guidance, which code rules should you follow based on the word used to control the key or button, such as press, hold, release, and click?
+
+The information should be in the following categories, and you should output the following content without adding any other explanation:
+Information:
+1. ...
+2. ...
+...
+Reasoning:
+1. ...
+2. ...
+...
+City_status:
+City_status is ...
+Environment_information:
+Environment information is ...
+Notification:
+Notification is ...
+Task_guidance:
+Task is ...
+Action_guidance:
+```python
+Python code to execute
+```
+```python
+Python code to execute
+```
+...
+Dialogue:
+Dialogue is ...
+Other:
+Other information is ...
