@@ -81,6 +81,13 @@ The backend returns the response in JSON format, with images encoded in base64. 
 | Police Station | 444 |
 | Police Headquarters | 443 |
 
+For more prefab IDs, please fellow below steps:
+1.Subscribe ModTool in steam workshop
+2.Open the game and click "UI" button added by ModTool on the top left corner
+3.Click the "UUI" button to enable the building information viewing function of ModTool
+4.Click the building you want to know the prefab ID in the game
+5.prefab Id will be shown in BuildingInfo Info-> System.Int32 m_prefabDataIndex
+
 # Api definition
 
 ## Building
@@ -177,6 +184,7 @@ Specify horizontal and pitch angles (in world coordinates) to rotate the camera 
   - message: string, succeed: "success"; failed: error message
 
 ## Screen Shot
+
 ### Get_Screen_Shot
 Capture a complete screenshot of the game, including the scenery and UI.
 - request parameter

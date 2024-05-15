@@ -68,13 +68,18 @@ from PIL import Image
 #     'action': 'Get_Screen_Shot',
 # }
 
+# data = {
+#     'action': 'Select_Zone',
+#     'start_pos_x': -100,
+#     'start_pos_z': -100,
+#     'end_pos_x': 100,
+#     'end_pos_z': 100,
+#     'zone_type': 3
+# }
+
 data = {
-    'action': 'Select_Zone',
-    'start_pos_x': -100,
-    'start_pos_z': -100,
-    'end_pos_x': 100,
-    'end_pos_z': 100,
-    'zone_type': 3
+    'action': 'Set_Pausing',
+    'pausing': False,
 }
 
 def send(data):

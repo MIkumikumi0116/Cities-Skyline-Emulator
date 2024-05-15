@@ -29,6 +29,9 @@ namespace Emulator_Backend{
             new Move_Camera(),
             new Rotate_Camera(),
 
+            //pause
+            new Set_Pausing(),
+
             // Screen Shot
             new Get_Screen_Shot(),
 

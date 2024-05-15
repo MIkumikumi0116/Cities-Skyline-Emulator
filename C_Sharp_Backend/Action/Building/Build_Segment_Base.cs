@@ -220,7 +220,7 @@ namespace Emulator_Backend {
                 var node_1_point = this.node_dict[segment_id_and_node.Value.First];
                 var node_2_point = this.node_dict[segment_id_and_node.Value.Second];
 
-                var overlap_flag      = false;
+                // var overlap_flag      = false;
                 var intersection_flag = false;
 
                 if (
@@ -229,7 +229,7 @@ namespace Emulator_Backend {
                     node_1_point == end_point   ||
                     node_2_point == end_point
                 ){
-                    overlap_flag = true;
+                    // overlap_flag = true;
                 }
                 else if (Point.Intersect(start_point, end_point, node_1_point, node_2_point)){
                     intersection_flag = true;
