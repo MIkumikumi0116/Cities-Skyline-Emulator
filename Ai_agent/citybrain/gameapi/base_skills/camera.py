@@ -10,6 +10,90 @@ from citybrain.gameio.skill_registry import register_skill, post_skill_wait
 config = Config()
 game_api = GameApiProvider()
 
+@register_skill("move_forward")
+def move_forward(duration=1) -> tuple[str]:
+    """
+    Moves the camera forward in the game at a specified distance.
+
+    Parameters:
+    - duration: The duration in seconds for which the character should move forward.
+
+    Returns:
+    - status: String, "ok" or "error"
+
+    - message: String, "success" if successful; error message if failed
+    """
+    data = {'action': 'Move_Camera',
+            'pos_x': 100,
+            'pos_y': 0,
+            'pos_z': 0,
+            'relative_to_camera': True}
+    game_api.send(data)
+    post_skill_wait(duration)
+
+@register_skill("move_back")
+def move_back(duration=1) -> tuple[str]:
+    """
+    Moves the camera backward in the game at a specified distance.
+
+    Parameters:
+    - duration: The duration in seconds for which the character should move backward.
+
+    Returns:
+    - status: String, "ok" or "error"
+
+    - message: String, "success" if successful; error message if failed
+    """
+    data = {'action': 'Move_Camera',
+            'pos_x': -100,
+            'pos_y': 0,
+            'pos_z': 0,
+            'relative_to_camera': True}
+    game_api.send(data)
+    post_skill_wait(duration)
+
+@register_skill("move_left")
+def move_left(duration=1) -> tuple[str]:
+    """
+    Moves the camera to the left in the game at a specified distance.
+
+    Parameters:
+    - duration: The duration in seconds for which the character should move to the left.
+
+    Returns:
+    - status: String, "ok" or "error"
+
+    - message: String, "success" if successful; error message if failed
+    """
+    data = {'action': 'Move_Camera',
+            'pos_x': 0,
+            'pos_y': 0,
+            'pos_z': -100,
+            'relative_to_camera': True}
+    game_api.send(data)
+    post_skill_wait(duration)
+
+@register_skill("move_right")
+def move_right(duration=1) -> tuple[str]:
+    """
+    Moves the camera to the right in the game at a specified distance.
+
+    Parameters:
+    - duration: The duration in seconds for which the character should move to the right.
+
+    Returns:
+    - status: String, "ok" or "error"
+
+    - message: String, "success" if successful; error message if failed
+    """
+    data = {'action': 'Move_Camera',
+            'pos_x': 0,
+            'pos_y': 0,
+            'pos_z': 100,
+            'relative_to_camera': True}
+    game_api.send(data)
+    post_skill_wait(duration)
+
 
 @register_skill("Get_Camera_Position")
 def Get_Camera_Position(action) -> tuple[str, float]:

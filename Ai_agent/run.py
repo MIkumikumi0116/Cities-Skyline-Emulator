@@ -38,7 +38,7 @@ from citybrain.gameio.atomic_skills.combat import __all__ as combat_skills
 from citybrain.gameio.composite_skills.auto_shoot import __all__ as auto_shoot_skills
 from citybrain.gameio.composite_skills.follow import __all__ as follow_skills
 from citybrain import constants
-from citybrain.action.base_action import ActionProvider
+from citybrain.gameapi import GameApiProvider
 import io
 import json
 import base64
@@ -48,7 +48,7 @@ from PIL import Image
 config = Config()
 logger = Logger()
 io_env = IOEnvironment()
-
+game_api=GameApiProvider()
 
 def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_description, skill_library, use_success_detection = False, use_self_reflection = False, use_information_summary = False):
 

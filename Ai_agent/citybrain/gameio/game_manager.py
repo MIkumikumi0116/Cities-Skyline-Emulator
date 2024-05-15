@@ -8,11 +8,14 @@ from citybrain.gameio.lifecycle.ui_control import take_screenshot, segment_minim
 from citybrain.gameio.composite_skills.navigation import navigate_path
 from citybrain.gameio.skill_registry import SkillRegistry
 from citybrain import constants
+from citybrain.gameapi import GameApiProvider
+
+
 
 config = Config()
 logger = Logger()
 io_env = IOEnvironment()
-
+game_api = GameApiProvider()
 
 class GameManager:
 

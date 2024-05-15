@@ -14,10 +14,13 @@ from citybrain.log import Logger
 from citybrain.utils.json_utils import load_json, save_json
 from citybrain.gameio import IOEnvironment
 from citybrain import constants
+from citybrain.gameapi import GameApiProvider
 
 config = Config()
 logger = Logger()
 io_env = IOEnvironment()
+game_api = GameApiProvider()
+
 
 SKILL_REGISTRY = {}
 SKILL_INDEX = []
@@ -28,12 +31,12 @@ SKILL_CODE_KEY = 'skill_code'
 SKILL_CODE_HASH_KEY = 'skill_code_base64'
 EXPL_SKILL_LIB_FILE='skill_lib.json'
 BASIC_SKILL_LIB_FILE='skill_lib_basic.json'
-BASIC_SKILLS = ['shoot_wolves', 'follow', 'go_to_horse', 'turn_and_move_forward', 'turn', 'move_forward', 'navigate_path', 'shoot', 'select_weapon', 'select_sidearm', 'fight', 'mount_horse']
+BASIC_SKILLS = []
 # MOVEMENT_SKILLS = ['move_forward', 'move_back','move_left', 'move_right']
 MOVEMENT_SKILLS = []
-MAP_SKILLS = ['select_previous_index_object', 'select_next_index_object']
-TRADE_SKILLS = ['select_upside_product', 'select_downside_product', 'select_rightside_product', 'select_leftside_product']
-DENY_LIST_TERMS = ['shoot', 'follow', 'turn', 'move_forward', 'go_to_horse', 'navigate_path', 'select_weapon', 'select_sidearm', 'fight', 'mount_horse']
+MAP_SKILLS = []
+TRADE_SKILLS = []
+DENY_LIST_TERMS = []
 ALLOW_LIST_TERMS = []
 
 
