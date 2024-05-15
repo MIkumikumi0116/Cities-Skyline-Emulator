@@ -293,7 +293,7 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
                 skill_library = gm.retrieve_skills(query_task = task_description, skill_num = config.skill_num, screen_type = screen_classification.lower())
                 logger.write(f'skill_library: {skill_library}')
                 skill_library = gm.get_skill_information(skill_library)
-
+            logger.info("skill_library:",skill_library)
             videocapture.clear_frame_buffer()
 
             # Decision making preparation
@@ -519,7 +519,21 @@ if __name__ == '__main__':
         }
     }
 
-    skill_library = ['move_forward', 'move_back','move_left', 'move_right']
+    skill_library = ["Get_Camera_Position",
+                     "Get_Camera_Rotation",
+                     "Move_Camera",
+                     "Rotate_Camera",
+                     "Set_Camera_Position",
+                     "Set_Camera_Rotation",
+                     "Get_Screen_Shot",
+                     'move_forward',
+                     'move_back',
+                     'move_left',
+                     'move_right',
+                     "Create_Building",
+                     "Select_Zone"]
+
+
     task_description =  ""
 
     config.ocr_fully_ban = True # not use local OCR-checks

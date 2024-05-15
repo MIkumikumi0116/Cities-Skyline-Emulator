@@ -275,5 +275,9 @@ __all__ = [
     "Rotate_Camera",
     "Set_Camera_Position",
     "Set_Camera_Rotation",
-    "Get_Screen_Shot"
+    "Get_Screen_Shot",
+    'move_forward',
+    'move_back',
+    'move_left',
+    'move_right'
 ]

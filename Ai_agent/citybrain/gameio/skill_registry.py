@@ -8,7 +8,7 @@ import os
 import base64
 
 import numpy as np
-
+from loguru import logger
 from citybrain.config import Config
 from citybrain.log import Logger
 from citybrain.utils.json_utils import load_json, save_json
@@ -17,7 +17,7 @@ from citybrain import constants
 from citybrain.gameapi import GameApiProvider
 
 config = Config()
-logger = Logger()
+logger_w  = Logger()
 io_env = IOEnvironment()
 game_api = GameApiProvider()
 
@@ -93,7 +93,7 @@ class SkillRegistry:
 
         if self.from_local:
             if not os.path.exists(os.path.join(self.local_path, self.skill_library_filename)):
-                logger.error(f"{os.path.join(self.local_path, self.skill_library_filename)} does not exist.")
+                logger_w .error(f"{os.path.join(self.local_path, self.skill_library_filename)} does not exist.")
                 self.filter_skill_library()
                 self.store_skills(os.path.join(self.local_path, self.skill_library_filename))
             else:
@@ -267,7 +267,7 @@ class SkillRegistry:
 
         if skill_code.count('(') < 2:
             info = "Skill code contains no functionality."
-            logger.error(info)
+            logger_w .error(info)
             return True, info
 
         skill_code = lower_func_name(skill_code)
@@ -281,17 +281,17 @@ class SkillRegistry:
                     for protected_skill in BASIC_SKILLS:
                         if word in protected_skill:
                             self.recent_skills.append(protected_skill)
-            logger.write(info)
+            logger_w .write(info)
             return True, info
 
         if overwrite:
             if skill_name in self.skill_registry:
                 self.delete_skill(skill_name)
-                logger.write(f"Skill '{skill_name}' will be overwritten.")
+                logger_w .write(f"Skill '{skill_name}' will be overwritten.")
 
         if skill_name in self.skill_registry:
             info = f"Skill '{skill_name}' already exists."
-            logger.write(info)
+            logger_w .write(info)
             return True, info
 
         try:
@@ -299,12 +299,12 @@ class SkillRegistry:
             skill = eval(skill_name)
         except:
             info = "The skill code is invalid."
-            logger.error(info)
+            logger_w .error(info)
             return False, info
 
         if check_param_description(skill) == False:
             info = "The format of parameter description is wrong."
-            logger.error(info)
+            logger_w .error(info)
             return False, info
 
         self.skill_registry[skill_name] = skill
@@ -315,7 +315,7 @@ class SkillRegistry:
         self.recent_skills.append(skill_name)
         print("this is skill_index4:", len(self.skill_index))
         info = f"Skill '{skill_name}' has been registered."
-        logger.write(info)
+        logger_w .write(info)
         return True, info
 
 
@@ -373,7 +373,7 @@ class SkillRegistry:
     def register_available_skills(self, candidates:List[str]) -> None:
         for skill_key in candidates:
             if skill_key not in self.skill_registry:
-                logger.error(f"Skill '{skill_key}' does not exist.")
+                logger_w .error(f"Skill '{skill_key}' does not exist.")
 
         for skill_key in list(self.skill_registry.keys()):
             if skill_key not in candidates:
@@ -395,6 +395,7 @@ class SkillRegistry:
 
 
     def convert_str_to_func(self, skill_name, skill_local):
+        logger.info(skill_local[skill_name][SKILL_CODE_KEY])
         exec(skill_local[skill_name][SKILL_CODE_KEY])
         skill = eval(skill_name)
         return skill
