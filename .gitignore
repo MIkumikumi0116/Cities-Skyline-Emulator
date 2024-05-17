@@ -5,6 +5,7 @@ C_Sharp_Backend/.vs/
 .vscode/launch.json
 *.mp4
 *.log
+
 Ai_agent/cache/*
 Ai_agent/conf/*
-Ai_agent/run/*
+Ai_agent/runs/*
