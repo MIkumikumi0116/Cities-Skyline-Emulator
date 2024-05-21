@@ -342,19 +342,19 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
             input["task_description"] = task_description
 
             # Minimap info tracking
-            if constants.MINIMAP_INFORMATION in response_keys:
-                minimap_information = data["res_dict"][constants.MINIMAP_INFORMATION]
-                logger_w.write(f"{constants.MINIMAP_INFORMATION}: {minimap_information}")
-
-                minimap_info_str = ""
-                for key, value in minimap_information.items():
-                    if value:
-                        for index, item in enumerate(value):
-                            minimap_info_str = minimap_info_str + key + ' ' + str(index) + ': angle '  + str(int(item['theta'])) + ' degree' + '\n'
-                minimap_info_str = minimap_info_str.rstrip('\n')
-
-                logger_w.write(f'minimap_info_str: {minimap_info_str}')
-                input[constants.MINIMAP_INFORMATION] = minimap_info_str
+            # if constants.MINIMAP_INFORMATION in response_keys:
+            #     minimap_information = data["res_dict"][constants.MINIMAP_INFORMATION]
+            #     logger_w.write(f"{constants.MINIMAP_INFORMATION}: {minimap_information}")
+            #
+            #     minimap_info_str = ""
+            #     for key, value in minimap_information.items():
+            #         if value:
+            #             for index, item in enumerate(value):
+            #                 minimap_info_str = minimap_info_str + key + ' ' + str(index) + ': angle '  + str(int(item['theta'])) + ' degree' + '\n'
+            #     minimap_info_str = minimap_info_str.rstrip('\n')
+            #
+            #     logger_w.write(f'minimap_info_str: {minimap_info_str}')
+            #     input[constants.MINIMAP_INFORMATION] = minimap_info_str
 
             data = planner.decision_making(input = input)
 
