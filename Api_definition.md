@@ -97,9 +97,9 @@ Construct a straight road between the specified starting point and endpoint acco
 - request parameter
   - action: string, "Build_Straight_Road"
   - start_x: float, start x coordinate of the road
-  - start_z: float, start z coordinate of the road
-  - end_x: float, end x coordinate of the road
-  - end_z: float, end z coordinate of the road
+  - start_z: float, ~
+  - end_x: float, ~
+  - end_z: float, ~
   - prefab_id: int, prefab id of road to be built, check Road Prefab Table for detail
 - response parameter
   - status: string, "ok" or "error"
@@ -109,8 +109,8 @@ Construct a straight road between the specified starting point and endpoint acco
 Construct a specified building at the designated location and orientation.
 - request parameter
   - action: string, "Create_Building"
-  - pox_x: int, x coordinate of the building
-  - pox_z: int, z coordinate of the building
+  - pox_x: float, x coordinate of the building
+  - pox_z: float, ~
   - angle: float, building orientation expressed in radians
   - prefab_id: int, prefab id of building to be built, check Building Prefab Table for detail
 - response parameter
@@ -183,6 +183,17 @@ Specify horizontal and pitch angles (in world coordinates) to rotate the camera 
   - status: string, "ok" or "error"
   - message: string, succeed: "success"; failed: error message
 
+## Pause
+
+### Set_Pausing
+Pause or resume the game
+- request parameter
+  - action: string, "Set_Pausing"
+  - pausing: bool, true: pause the game; false: resume the game
+- response parameter
+  - status: string, "ok" or "error"
+  - message: string, succeed: "success"; failed: error message
+
 ## Screen Shot
 
 ### Get_Screen_Shot
@@ -193,3 +204,18 @@ Capture a complete screenshot of the game, including the scenery and UI.
   - status: string, "ok" or "error"
   - message: string, succeed: "success"; failed: error message
   - screen_shot_base64: string, base64 encoding of a png image.
+
+## Zone
+
+### Select_Zone
+Specify the zone type and diagonal coordinate of the rectangle, and set the zone type of the selected area
+- request parameter
+  - action: string, "Select_Zone"
+  - start_pos_x: float, x coordinate of the starting point of the rectangle
+  - start_pos_z: float, ~
+  - end_pos_x: float, ~
+  - end_pos_z: float, ~
+  - zone_type: int, zone type to be set, 0: unzoned, 1: distant, 2: residential low, 3: residential high, 4: commercial low, 5: commercial high, 6: industrial, 7: office
+- response parameter
+  - status: string, "ok" or "error"
+  - message: string, succeed: "success"; failed: error message
