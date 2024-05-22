@@ -39,7 +39,11 @@ namespace Emulator_Backend{
             new Set_Edge_Scrolling_Option(),
 
             // Zone
-            new Select_Zone()
+            new Select_Zone(),
+
+            // Electricity
+            new Get_Wind_Power(),
+            new Get_Map_Wind_Power(),
         };
 
         public Action_Distributor(){

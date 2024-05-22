@@ -82,6 +82,15 @@ data = {
     'pausing': False,
 }
 
+data = {
+    'action': 'Get_Wind_Power',
+    'start_pos_x': 0,
+    'start_pos_z': 0,
+    'radius': 1000,
+    'step': 100,
+    'ignore_weather': False
+}
+
 def send(data):
     print(data)
 

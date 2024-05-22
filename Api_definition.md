@@ -193,3 +193,33 @@ Capture a complete screenshot of the game, including the scenery and UI.
   - status: string, "ok" or "error"
   - message: string, succeed: "success"; failed: error message
   - screen_shot_base64: string, base64 encoding of a png image.
+
+
+## Electricity
+
+### Get_Wind_Power
+Smaple wind power at a specific (x, z) point with a given radius, step. 
+- request parameter
+  - action: string, "Get_Wind_Power"
+  - start_pos_x: float, x coordinate
+  - start_pos_z: float, z coordinate 
+  - radius: float, radius of the area to be checked, the center is (start_pos_x, start_pos_z)
+  - step: float, sample step size
+  - ignore_weather: bool, true: ignore weather effects; false: consider weather effects
+- response parameter
+  - status: string, "ok" or "error"
+  - message: string, succeed: "success"; failed: error message
+  - result: string, stringed dictionary of wind power data
+  e.g. {'status': 'ok', 'message': 'success', 'result': '{"(-1920.0, 135.7, -1920.0)": 0.9090625,"(-1920.0, 104.9, -1820.0)": 0.6752979,"(-1920.0, 60.9, -1720.0)": 0.226836,"(-1920.0, 43.5, -1620.0)": 0.2874268}'}
+
+### Get_Map_Wind_Power
+The special case of Get_Wind_Power, sample wind power at a specific (0, 0) point with a given step, radius is 1920.
+- request parameter
+  - action: string, "Get_Map_Wind_Power"
+  - step: float, sample step size
+  - ignore_weather: bool, true: ignore weather effects; false: consider weather effects
+- response parameter
+  - status: string, "ok" or "error"
+  - message: string, succeed: "success"; failed: error message
+  - result: string, stringed dictionary of wind power data
+  e.g. {'status': 'ok', 'message': 'success', 'result': '{"(-1920.0, 135.7, -1920.0)": 0.9090625,"(-1920.0, 104.9, -1820.0)": 0.6752979,"(-1920.0, 60.9, -1720.0)": 0.226836,"(-1920.0, 43.5, -1620.0)": 0.2874268}'}
