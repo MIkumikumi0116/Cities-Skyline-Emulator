@@ -219,6 +219,14 @@ class GatherInformation():
             if self.frame_extractor is not None:
 
                 text_input = input["text_input"]
+                '''
+                Ai_agent/res/prompts/inputs/gather_information.json
+                {
+                    "introduction": input["image_introduction"][-1]["introduction"],
+                    "path": memory.get_recent_history("image", k=1)[0],
+                    "assistant": input["image_introduction"][-1]["assistant"]
+                }
+                '''
                 video_path = input["video_clip_path"]
 
                 if "test_text_image" in input.keys() and input["test_text_image"]:  # offline test
@@ -728,8 +736,8 @@ class Planner(BasePlanner):
         if not check_planner_params(self.planner_params):
             raise ValueError(f"Error in planner_params: {self.planner_params}")
 
-        self.inputs = self._init_inputs()
-        self.templates = self._init_templates()
+        self.inputs = self._init_inputs() #Ai_agent/res/prompts/inputs
+        self.templates = self._init_templates()#Ai_agent/res/prompts/templates
 
         if use_screen_classification:
             self.screen_classification_ = ScreenClassification(input_example=self.inputs["screen_classification"],
@@ -773,6 +781,26 @@ class Planner(BasePlanner):
     def _init_inputs(self):
 
         input_examples = dict()
+        '''
+            "prompt_paths": {
+            "inputs": {
+                "decision_making": "./res/prompts/inputs/decision_making.json",
+                "gather_information": "./res/prompts/inputs/gather_information.json",
+                "success_detection": "./res/prompts/inputs/success_detection.json",
+                "self_reflection": "./res/prompts/inputs/self_reflection.json",
+                "information_summary": "./res/prompts/inputs/information_summary.json",
+                "gather_text_information": "./res/prompts/inputs/gather_text_information.json"
+            },
+            "templates": {
+                "decision_making": "./res/prompts/templates/decision_making.prompt",
+                "gather_information": "./res/prompts/templates/gather_information.prompt",
+                "success_detection": "./res/prompts/templates/success_detection.prompt",
+                "self_reflection": "./res/prompts/templates/self_reflection.prompt",
+                "information_summary": "./res/prompts/templates/information_summary.prompt",
+                "gather_text_information": "./res/prompts/templates/gather_text_information.prompt"
+            },
+        }
+        '''
         prompt_paths = self.planner_params["prompt_paths"]
         input_example_paths = prompt_paths["inputs"]
 
@@ -805,7 +833,7 @@ class Planner(BasePlanner):
     def gather_information(self, *args, input: Dict[str, Any] = None, **kwargs) -> Dict[str, Any]:
 
         if input is None:
-            input = self.inputs["gather_information"]
+            input = self.inputs["gather_information"]#Ai_agent/res/prompts/inputs/gather_information.json
 
         image_file = input["image_introduction"][0]["path"]
 

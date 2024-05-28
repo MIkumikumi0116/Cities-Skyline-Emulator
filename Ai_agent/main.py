@@ -106,8 +106,8 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
         try:
             # Gather information preparation
             logger_w.write(f'Gather Information Start Frame ID: {start_frame_id}, End Frame ID: {end_frame_id}')
-            input = planner.gather_information_.input_map
-            text_input = planner.gather_information_.text_input_map
+            input = planner.gather_information_.input_map #Ai_agent/res/prompts/inputs/gather_information.json
+            text_input = planner.gather_information_.text_input_map #Ai_agent/res/prompts/inputs/gather_text_information.json
             video_clip_path = videocapture.get_video(start_frame_id,end_frame_id)
             task_description = memory.get_task_guidance(use_last=False)
 
@@ -122,9 +122,9 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
             # Configure the gather_information module
             gather_information_configurations = {
                 "frame_extractor": True, # extract text from the video clip
-                "icon_replacer": True,
+                "icon_replacer": False,
                 "llm_description": True, # get the description of the current screenshot
-                "object_detector": True
+                "object_detector": False
             }
             input["gather_information_configurations"] = gather_information_configurations
 
@@ -358,6 +358,7 @@ def trigger_pipeline_loop(llm_provider_config_path, planner_params, task_descrip
 
             data = planner.decision_making(input = input)
 
+            skill_steps = data['res_dict']['actions']
             skill_steps = data['res_dict']['actions']
             if skill_steps is None:
                 skill_steps = []

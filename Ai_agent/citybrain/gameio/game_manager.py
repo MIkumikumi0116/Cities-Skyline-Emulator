@@ -32,6 +32,7 @@ class GameManager:
                                             embedding_provider = embedding_provider)
 
 
+    #需要改
     def pause_game(self, screen_type=constants.GENERAL_GAME_INTERFACE):
 
         if screen_type==constants.GENERAL_GAME_INTERFACE or screen_type==constants.PAUSE_INTERFACE or screen_type==constants.RADIAL_INTERFACE:

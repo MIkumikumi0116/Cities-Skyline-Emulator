@@ -50,6 +50,42 @@ PROVIDER_SETTING_BASE_VAR = "base_var"       # Azure-speficic setting
 PROVIDER_SETTING_API_VERSION = "api_version" # Azure-speficic setting
 PROVIDER_SETTING_DEPLOYMENT_MAP = "models"   # Azure-speficic setting
 
+#处理system为list问题
+def preprocess_messages(messages):
+    # logger.info("Preprocessing messages")
+    for message in messages:
+        #print("Processing message:", message)  # 打印正在处理的消息
+        if (message.get('role') == 'system' or  message.get('role') == 'assistant') and isinstance(message.get('content'), list):
+            first_content = message['content'][0]
+            if isinstance(first_content, dict) and 'text' in first_content:
+                message['content'] = first_content['text']
+            else:
+                message['contents'] = str(first_content)
+        #print("Processed message:", message)  # 打印处理后的消息
+    return messages
+def print_messages(messages) -> None:
+    logger.info("Printing messages")
+    for message in messages:
+        role = message.get('role', 'unknown')
+        content = message.get('content', '')
+
+        # 处理 content 的格式
+        if isinstance(content, list):
+            processed_content = []
+            for part in content:
+                if part.get('type') == 'url':
+                    continue
+                processed_content.append(part.get('text', ''))
+            content = ' '.join(processed_content)
+        elif isinstance(content, str):
+            content = content
+
+        # 打印 message
+        if role == 'user' and isinstance(content, list):
+            filtered_content = [part for part in content if part.get('type') != 'url']
+            print(f"Role: {role}, Content: {filtered_content}")
+        else:
+            print(f"Role: {role}, Content: {content}")
 
 class OpenAIProvider(LLMProvider, EmbeddingProvider):
     """A class that wraps a given model"""
@@ -302,7 +338,7 @@ class OpenAIProvider(LLMProvider, EmbeddingProvider):
             ],
         )
         """
-
+        # print_messages(messages)
         if model is None:
             model = self.llm_model
         logger.info("start requesting completion")
@@ -320,7 +356,6 @@ class OpenAIProvider(LLMProvider, EmbeddingProvider):
             max_tries=self.retries,
             interval=10,
         )
-
         def _generate_response_with_retry(
             messages: List[Dict[str, str]],
             model: str,
@@ -328,11 +363,10 @@ class OpenAIProvider(LLMProvider, EmbeddingProvider):
             seed: int = None,
             max_tokens: int = 512,
         ) -> Tuple[str, Dict[str, int]]:
-
             """Send a request to the OpenAI API."""
             if self.provider_cfg[PROVIDER_SETTING_IS_AZURE]:
                 response = self.client.chat.completions.create(model=model,
-                messages=messages,
+                messages=preprocess_messages(messages),
                 temperature=temperature,
                 seed=seed,
                 max_tokens=max_tokens,)
@@ -340,7 +374,7 @@ class OpenAIProvider(LLMProvider, EmbeddingProvider):
                 # print("this is messages:",messages)
                 # print("this is model", model)
                 response = self.client.chat.completions.create(model=model,
-                messages=messages,
+                messages=preprocess_messages(messages),
                 temperature=temperature,
                 seed=seed,
                 max_tokens=max_tokens,)
@@ -412,7 +446,7 @@ class OpenAIProvider(LLMProvider, EmbeddingProvider):
                 response = await asyncio.to_thread(
                     self.client.chat.completions.create,
                     model=model,
-                    messages=messages,
+                    messages=preprocess_messages(messages),
                     temperature=temperature,
                     seed=seed,
                     max_tokens=max_tokens,
@@ -421,7 +455,7 @@ class OpenAIProvider(LLMProvider, EmbeddingProvider):
                 response = await asyncio.to_thread(
                     self.client.chat.completions.create,
                     model=model,
-                    messages=messages,
+                    messages=preprocess_messages(messages),
                     temperature=temperature,
                     seed=seed,
                     max_tokens=max_tokens,

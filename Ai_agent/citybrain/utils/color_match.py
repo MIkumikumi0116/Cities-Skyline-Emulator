@@ -1,3 +1,19 @@
+'''1.
+提取主体颜色：使用K-means聚类算法来确定图片中的主要颜色。这个算法会将所有像素点的颜色分成k个类别（或“簇”），每个类别都有一个中心颜色，这些中心颜色代表了图片中的主体颜色。
+2.
+创建颜色范围：对于每个主体颜色，代码会计算一个HSV颜色空间中的颜色范围。这个范围是围绕主体颜色的，由radius_threshold参数动态调整。
+3.
+生成颜色掩码：使用cv2.inRange函数，根据上一步计算的颜色范围，在目标图片上生成一个二值掩码。这个掩码会标记出所有落在颜色范围内的像素点。
+4.
+查找轮廓：使用cv2.findContours函数在掩码上查找连续的区域（即轮廓）。这些轮廓代表了与主体颜色相匹配的区域。
+5.
+计算圆形区域：对于每个轮廓，代码会计算最小包围圆，并检查这个圆的半径是否大于或等于radius_threshold。
+6.
+验证颜色一致性：对于符合半径条件的圆形区域，代码会进一步检查圆内至少95%的像素是否是主体颜色。
+7.
+标记和排序：满足所有条件的圆形区域会被添加到一个列表中，并按照半径大小排序。最后，代码会返回最大的k个区域。'''
+
+
 import cv2
 import numpy as np
 from sklearn.cluster import KMeans
@@ -91,5 +107,10 @@ def color_match(src_image_path, target_image_path, k1=1, k2=1, radius_threshold=
 # 调用示例
 src_image_path = r'D:\Users\10424\Desktop\game\3-match.png'
 target_image_path = r'D:\Users\10424\Desktop\game\3.png'
-output = color_match(src_image_path, target_image_path, k1=5, k2=3, radius_threshold=1)
+#k1 选取src_image_path中几个颜色
+#k2 选取target_image_path中几个范围
+#radius_threshold 圆半径
+
+output = color_match(src_image_path, target_image_path, k1=1, k2=1, radius_threshold=10)
 print(output)
+#输出:Color {i+1} region {j+1}: Center: {center}, Radius: {radius}
