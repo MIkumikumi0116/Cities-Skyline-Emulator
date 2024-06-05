@@ -91,6 +91,10 @@ data = {
     'ignore_weather': False
 }
 
+data = {
+    'action': 'Get_Happiness_Info',
+}
+
 def send(data):
     print(data)
 

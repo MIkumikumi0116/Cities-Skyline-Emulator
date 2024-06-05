@@ -44,6 +44,11 @@ namespace Emulator_Backend{
             // Electricity
             new Get_Wind_Power(),
             new Get_Map_Wind_Power(),
+
+            // Citizen
+            new Get_Education_Info(),
+            new Get_Population_Info(),
+            new Get_Happiness_Info(),
         };
 
         public Action_Distributor(){
