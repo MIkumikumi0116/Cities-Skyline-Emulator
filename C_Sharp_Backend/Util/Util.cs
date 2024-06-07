@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Emulator_Backend {
     public static class Util {
@@ -17,6 +18,12 @@ namespace Emulator_Backend {
             json = json.TrimEnd(',');
             json += "}";
             return json;
+        }
+
+        public static int GetValue(long value, long total)
+        {
+            float num = (float)value / (float)total;
+            return (int)Math.Round(num);
         }
     }
 }

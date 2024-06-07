@@ -49,6 +49,10 @@ namespace Emulator_Backend{
             new Get_Education_Info(),
             new Get_Population_Info(),
             new Get_Happiness_Info(),
+
+            // Economy
+            new Get_Economy_Info(),
+            new Get_Expense_Info(),
         };
 
         public Action_Distributor(){

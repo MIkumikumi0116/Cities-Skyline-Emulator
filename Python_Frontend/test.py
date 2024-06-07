@@ -92,7 +92,12 @@ data = {
 }
 
 data = {
-    'action': 'Get_Happiness_Info',
+    'action': 'Get_Economy_Info',
+    'type': 'budget'
+    #'type': 'overview'
+    #'type': 'income'
+    #'type': 'expense'
+    #'type': 'budget'
 }
 
 def send(data):
