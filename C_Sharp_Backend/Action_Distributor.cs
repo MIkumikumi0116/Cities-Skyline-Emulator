@@ -40,6 +40,7 @@ namespace Emulator_Backend{
 
             // Zone
             new Select_Zone(),
+            new Get_UnConnected_Road(),
 
             // Electricity
             new Get_Wind_Power(),

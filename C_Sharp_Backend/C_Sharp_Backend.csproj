@@ -71,6 +71,7 @@
     <Compile Include="Action\Pause\Set_Pausing.cs" />
     <Compile Include="Action\Screen_Shot\Get_Screen_Shot.cs" />
     <Compile Include="Action\Setting\Set_Edge_Scrolling_Option.cs" />
+    <Compile Include="Action\Zone\Get_UnConnected_Road.cs" />
     <Compile Include="Action\Zone\Select_Zone.cs" />
     <Compile Include="Action_Distributor.cs" />
     <Compile Include="Emulator_Backend.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Util\ElectricityHelper.cs" />
     <Compile Include="Util\Pair.cs" />
     <Compile Include="Util\Point.cs" />
+    <Compile Include="Util\RoadHelper.cs" />
     <Compile Include="Util\Util.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

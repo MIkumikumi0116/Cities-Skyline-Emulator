@@ -20,6 +20,18 @@ namespace Emulator_Backend {
             return json;
         }
 
+        public static string ConvertToJSON(List<object> obj)
+        {
+            var json = "{";
+            foreach (var item in obj)
+            {
+                json += $"{item},";
+            }
+            json = json.TrimEnd(',');
+            json += "}";
+            return json;
+        }
+
         public static int GetValue(long value, long total)
         {
             float num = (float)value / (float)total;

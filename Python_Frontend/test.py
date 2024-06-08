@@ -92,8 +92,8 @@ data = {
 }
 
 data = {
-    'action': 'Get_Economy_Info',
-    'type': 'budget'
+    'action': 'Get_UnConnected_Road',
+    # 'type': 'budget'
     #'type': 'overview'
     #'type': 'income'
     #'type': 'expense'
