@@ -41,6 +41,9 @@ namespace Emulator_Backend{
             // Zone
             new Select_Zone(),
             new Get_UnConnected_Road(),
+            new Get_RoadNode_Info(),
+            new Get_TrafficDensity_Info(),
+            new Get_PublicTransport_Info(),
 
             // Electricity
             new Get_Wind_Power(),
