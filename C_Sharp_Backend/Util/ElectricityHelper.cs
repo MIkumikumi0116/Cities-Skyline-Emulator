@@ -47,5 +47,47 @@ namespace Emulator_Backend
             json += "}";
             return json;
         }
+
+        public static string GetElectricityNotification()
+        {
+            var buildingManager = Singleton<BuildingManager>.instance;
+            var result = new Dictionary<object, object>();
+
+            for (var i = 0; i < buildingManager.m_buildings.m_buffer.Length; i++)
+            {
+                var building = buildingManager.m_buildings.m_buffer[i];
+                var problems = building.m_problems;
+                foreach (var problem in problems)
+                {
+                    if (problem == Notification.Problem1.Electricity)
+                    {
+                        result.Add(i, building.m_position);
+                    }
+                }
+            }
+
+            return Util.ConvertToJSON<object>(result);
+        }
+
+        public static string GetWaterNotification()
+        {
+            var buildingManager = Singleton<BuildingManager>.instance;
+            var result = new Dictionary<object, object>();
+
+            for (var i = 0; i < buildingManager.m_buildings.m_buffer.Length; i++)
+            {
+                var building = buildingManager.m_buildings.m_buffer[i];
+                var problems = building.m_problems;
+                foreach (var problem in problems)
+                {
+                    if (problem == Notification.Problem1.Water)
+                    {
+                        result.Add(i, building.m_position);
+                    }
+                }
+            }
+
+            return Util.ConvertToJSON<object>(result);
+        }
     }
 }

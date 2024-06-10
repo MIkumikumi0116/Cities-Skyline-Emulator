@@ -92,7 +92,7 @@ data = {
 }
 
 data = {
-    'action': 'Get_PublicTransport_Info',
+    'action': 'Get_Water_Notification',
     # 'type': 'budget'
     #'type': 'overview'
     #'type': 'income'

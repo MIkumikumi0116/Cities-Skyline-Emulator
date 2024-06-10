@@ -66,7 +66,9 @@
     <Compile Include="Action\Citizen\Get_Population_Info.cs" />
     <Compile Include="Action\Economy\Get_Economy_Info.cs" />
     <Compile Include="Action\Economy\Get_Expense_Info.cs" />
+    <Compile Include="Action\Electricity\Get_Electricity_Notification.cs" />
     <Compile Include="Action\Electricity\Get_Map_Wind_Power.cs" />
+    <Compile Include="Action\Electricity\Get_Water_Notification.cs" />
     <Compile Include="Action\Electricity\Get_Wind_Power.cs" />
     <Compile Include="Action\Pause\Set_Pausing.cs" />
     <Compile Include="Action\Screen_Shot\Get_Screen_Shot.cs" />

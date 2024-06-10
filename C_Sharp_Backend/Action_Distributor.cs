@@ -48,6 +48,9 @@ namespace Emulator_Backend{
             // Electricity
             new Get_Wind_Power(),
             new Get_Map_Wind_Power(),
+            new Get_Water_Notification(),
+            new Get_Electricity_Notification(),
+
 
             // Citizen
             new Get_Education_Info(),
