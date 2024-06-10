@@ -92,7 +92,7 @@ data = {
 }
 
 data = {
-    'action': 'Get_Water_Notification',
+    'action': 'Get_Garbage_Info',
     # 'type': 'budget'
     #'type': 'overview'
     #'type': 'income'

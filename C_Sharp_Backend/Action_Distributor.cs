@@ -44,6 +44,9 @@ namespace Emulator_Backend{
             new Get_RoadNode_Info(),
             new Get_TrafficDensity_Info(),
             new Get_PublicTransport_Info(),
+            new Get_Pollution_Info(),
+            new Get_Garbage_Info(),
+            new Get_Sewage_Info(),
 
             // Electricity
             new Get_Wind_Power(),
