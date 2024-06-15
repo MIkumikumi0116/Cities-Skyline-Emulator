@@ -80,6 +80,7 @@
     <Compile Include="Action\Zone\Get_Sewage_Info.cs" />
     <Compile Include="Action\Zone\Get_TrafficDensity_Info.cs" />
     <Compile Include="Action\Zone\Get_UnConnected_Road.cs" />
+    <Compile Include="Action\Zone\Get_Zone_Info.cs" />
     <Compile Include="Action\Zone\Select_Zone.cs" />
     <Compile Include="Action_Distributor.cs" />
     <Compile Include="Emulator_Backend.cs" />

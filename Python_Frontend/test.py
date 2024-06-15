@@ -92,7 +92,7 @@ data = {
 }
 
 data = {
-    'action': 'Get_Garbage_Info',
+    'action': 'Get_Zone_Info',
     # 'type': 'budget'
     #'type': 'overview'
     #'type': 'income'

@@ -47,6 +47,7 @@ namespace Emulator_Backend{
             new Get_Pollution_Info(),
             new Get_Garbage_Info(),
             new Get_Sewage_Info(),
+            new Get_Zone_Info(),
 
             // Electricity
             new Get_Wind_Power(),

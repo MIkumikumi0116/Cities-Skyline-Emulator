@@ -14,7 +14,7 @@ namespace Emulator_Backend
             var list = new List<object>();
             foreach (var node in netManager.m_nodes.m_buffer)
             {
-                foreach(var problem in node.m_problems)
+                foreach (var problem in node.m_problems)
                 {
                     if (problem.m_Problems1 == Notification.Problem1.RoadNotConnected)
                     {
@@ -24,7 +24,7 @@ namespace Emulator_Backend
             }
             return Util.ConvertToJSON(list);
         }
-    
+
         public static string GetRoadTrafficDensity()
         {
             var netManager = Singleton<NetManager>.instance;
@@ -51,6 +51,33 @@ namespace Emulator_Backend
             }
             var node = netManager.m_nodes.m_buffer[id];
             dict["position"] = node.m_position.ToString();
+            return Util.ConvertToJSON<object>(dict);
+        }
+
+        public static string GetZoneInfo()
+        {
+            var buildingManager = Singleton<BuildingManager>.instance;
+            var dict = new Dictionary<object, object>();
+
+            var targets = new List<ItemClass.Service> {
+                    ItemClass.Service.Residential,
+                    ItemClass.Service.Commercial,
+                    ItemClass.Service.Industrial,
+                    ItemClass.Service.Office,
+                };
+            for (int i = 0; i < buildingManager.m_buildings.m_buffer.Length; i++)
+            {
+                var building = buildingManager.m_buildings.m_buffer[i];
+                var item = building.Info.GetService();
+
+                if (targets.Count > 0 && !targets.Contains(item))
+                {
+                    continue;
+                }
+
+                var subItem = building.Info.GetSubService();
+                dict[i] = $"{building.m_position}+{subItem}";
+            }
             return Util.ConvertToJSON<object>(dict);
         }
     }
