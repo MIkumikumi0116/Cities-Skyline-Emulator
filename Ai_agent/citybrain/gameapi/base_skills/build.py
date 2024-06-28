@@ -103,46 +103,9 @@ def Select_Zone(action) -> tuple[str]:
     return game_api.send(data)
 
 
-def Select_Zone(action, start_pos_x, start_pos_z, end_pos_x, end_pos_z, zone_type) :
-    """
-    Specify the zone type and diagonal coordinate of the rectangle, and set the zone type of the selected area.
-
-    Parameters:
-    action: string, "Select_Zone"
-    start_pos_x: float, x coordinate of the starting point of the rectangle
-    start_pos_z: float, z coordinate of the starting point of the rectangle
-    end_pos_x: float, x coordinate of the ending point of the rectangle
-    end_pos_z: float, z coordinate of the ending point of the rectangle
-    zone_type: int, zone type to be set, with the following options:
-        0: unzoned
-        1: distant
-        2: residential low
-        3: residential high
-        4: commercial low
-        5: commercial high
-        6: industrial
-        7: office
-
-    Returns:
-    tuple[str]:
-        status: string, "ok" or "error"
-        message: string, "success" if succeeded; otherwise, an error message
-    """
-
-    # Create a dictionary with the zone selection data
-    data = {
-        "action": "Select_Zone",
-        "start_pos_x": start_pos_x,  # x coordinate of the starting point
-        "start_pos_z": start_pos_z,  # z coordinate of the starting point
-        "end_pos_x": end_pos_x,  # x coordinate of the ending point
-        "end_pos_z": end_pos_z,  # z coordinate of the ending point
-        "zone_type": zone_type  # type of the zone to set
-    }
-
-    # Send the data to the game API
-    game_api.send(data)
 
 
+@register_skill("Set_Pausing")
 def Set_Pausing(action, pausing) :
     """
     Pause or resume the game.

@@ -1,77 +1,160 @@
 [
   {
     "name": "move_forward",
-    "code": "def move_forward(duration):\n    \"\"\"\n    Moves the camera forward in the game at a specified distance.\n\n    Parameters:\n    - duration: The duration in seconds for which the character should move forward.\n    \"\"\"\n    data = {'action': 'Move_Camera',     'pos_x': 100,     'pos_y': 0,     'pos_z': 0,     'relative_to_camera': True }\n    game_api.send(data)\n    post_skill_wait(duration)\n",
+    "code": "def move_forward(duration):\n    \"\"\"\n    Moves the camera forward in the game at a specified distance.\n\n    Parameters:\n    - duration: The duration in seconds for which the character should move forward.\n    \"\"\"\n    data = {'action': 'Move_Camera',     'pos_x': 100,     'pos_y': 0,     'pos_z': 0,     'relative_to_camera': True },\n    return game_api.send(data)\n    post_skill_wait(duration)\n",
     "code_description": "This code defines a function called move_forward, which moves the camera forward in the game for a specified duration."
   },
   {
     "name": "move_back",
-    "code": "def move_back(duration):\n    \"\"\"\n    Moves the camera backward in the game at a specified distance.\n\n    Parameters:\n    - duration: The duration in seconds for which the character should move backward.\n    \"\"\"\n    data = {'action': 'Move_Camera',     'pos_x': -100,     'pos_y': 0,     'pos_z': 0,     'relative_to_camera': True }\n    game_api.send(data)\n    post_skill_wait(duration)\n",
+    "code": "def move_back(duration):\n    \"\"\"\n    Moves the camera backward in the game at a specified distance.\n\n    Parameters:\n    - duration: The duration in seconds for which the character should move backward.\n    \"\"\"\n    data = {'action': 'Move_Camera',     'pos_x': -100,     'pos_y': 0,     'pos_z': 0,     'relative_to_camera': True },\n    return game_api.send(data)\n    post_skill_wait(duration)\n",
     "code_description": "This code defines a function called move_back, which moves the camera backward in the game for a specified duration."
   },
   {
     "name": "move_left",
-    "code": "def move_left(duration):\n    \"\"\"\n    Moves the camera to the left in the game at a specified distance.\n\n    Parameters:\n    - duration: The duration in seconds for which the character should move to the left.\n    \"\"\"\n    data = {'action': 'Move_Camera',     'pos_x': 0,     'pos_y': 0,     'pos_z': -100,     'relative_to_camera': True }\n    game_api.send(data)\n    post_skill_wait(duration)\n",
+    "code": "def move_left(duration):\n    \"\"\"\n    Moves the camera to the left in the game at a specified distance.\n\n    Parameters:\n    - duration: The duration in seconds for which the character should move to the left.\n    \"\"\"\n    data = {'action': 'Move_Camera',     'pos_x': 0,     'pos_y': 0,     'pos_z': -100,     'relative_to_camera': True },\n    return game_api.send(data)\n    post_skill_wait(duration)\n",
     "code_description": "This code defines a function called move_left, which moves the camera to the left in the game for a specified duration."
   },
   {
     "name": "move_right",
-    "code": "def move_right(duration):\n    \"\"\"\n    Moves the camera to the right in the game at a specified distance.\n\n    Parameters:\n    - duration: The duration in seconds for which the character should move to the right.\n    \"\"\"\n    data = {'action': 'Move_Camera',     'pos_x': 0,     'pos_y': 0,     'pos_z': 100,     'relative_to_camera': True }\n    game_api.send(data)\n    post_skill_wait(duration)\n",
+    "code": "def move_right(duration):\n    \"\"\"\n    Moves the camera to the right in the game at a specified distance.\n\n    Parameters:\n    - duration: The duration in seconds for which the character should move to the right.\n    \"\"\"\n    data = {'action': 'Move_Camera',     'pos_x': 0,     'pos_y': 0,     'pos_z': 100,     'relative_to_camera': True },\n    return game_api.send(data)\n    post_skill_wait(duration)\n",
     "code_description": "This code defines a function called move_right, which moves the camera to the right in the game for a specified duration."
   },
   {
     "name": "Build_Straight_Road",
-    "code": "def Build_Straight_Road(action, start_x, start_z, end_x, end_z, prefab_id) -> tuple[str]:\n    \n    \"\"\"\n    Construct a straight road between the specified starting point and endpoint according to the style specified by prefab_id\n\n    Parameters:\n- action: string, \"Build_Straight_Road\"\n        - start_x: float, start x coordinate of the road\n        - start_z: float, start z coordinate of the road\n        - end_x: float, end x coordinate of the road\n        - end_z: float, end z coordinate of the road\n        - prefab_id: int, prefab id of road to be built, check Road Prefab Table for detail\n   Return:\n- status: string, \"ok\" or \"error\"        - message: string, succeed: \"success\"; failed: error message\n    \"\"\"\n    data = {\n        \"action\": \"Build_Straight_Road\",\n        \"start_x\": 0,\n        \"start_z\": 0,\n        \"end_x\": 100,\n        \"end_z\": 100,\n        \"prefab_id\": 89\n    }\n    game_api.send(data)\n",
+    "code": "def Build_Straight_Road(action, start_x, start_z, end_x, end_z, prefab_id) -> tuple[str]:\n    \n    \"\"\"\n    Construct a straight road between the specified starting point and endpoint according to the style specified by prefab_id\n\n    Parameters:\n- action: string, \"Build_Straight_Road\"\n        - start_x: float, start x coordinate of the road\n        - start_z: float, start z coordinate of the road\n        - end_x: float, end x coordinate of the road\n        - end_z: float, end z coordinate of the road\n        - prefab_id: int, prefab id of road to be built, check Road Prefab Table for detail\n   Return:\n- status: string, \"ok\" or \"error\"        - message: string, succeed: \"success\"; failed: error message\n    \"\"\"\n    data = {\n        \"action\": \"Build_Straight_Road\",\n        \"start_x\": 0,\n        \"start_z\": 0,\n        \"end_x\": 100,\n        \"end_z\": 100,\n        \"prefab_id\": 89\n    },\n    return game_api.send(data)\n",
     "code_description": "This code defines a function called Build_Straight_Road that constructs a straight road between the specified starting point and endpoint according to the style specified by prefab_id."
   },
   {
     "name": "Create_Building",
-    "code": "def Create_Building(action, pox_x, pox_z, angle, prefab_id) -> tuple[str]:\n    \n    \"\"\"\n    Construct a specified building at the designated location and orientation.\n\n    Parameters:\n- action: string, \"Create_Building\"\n        - pox_x: int, x coordinate of the building\n        - pox_z: int, z coordinate of the building\n        - angle: float, building orientation expressed in radians\n        - prefab_id: int, prefab id of building to be built, check Building Prefab Table for detail\n   Return:\n- status: string, \"ok\" or \"error\"        - message: string, succeed: \"success\"; failed: error message\n    \"\"\"\n    data = {\n        \"action\": \"Create_Building\",\n        \"pox_x\": 0,\n        \"pox_z\": 0,\n        \"angle\": 0,\n        \"prefab_id\": 1\n    }\n    game_api.send(data)\n",
+    "code": "def Create_Building(action, pox_x, pox_z, angle, prefab_id) -> tuple[str]:\n    \n    \"\"\"\n    Construct a specified building at the designated location and orientation.\n\n    Parameters:\n- action: string, \"Create_Building\"\n        - pox_x: int, x coordinate of the building\n        - pox_z: int, z coordinate of the building\n        - angle: float, building orientation expressed in radians\n        - prefab_id: int, prefab id of building to be built, check Building Prefab Table for detail\n   Return:\n- status: string, \"ok\" or \"error\"        - message: string, succeed: \"success\"; failed: error message\n    \"\"\"\n    data = {\n        \"action\": \"Create_Building\",\n        \"pox_x\": 0,\n        \"pox_z\": 0,\n        \"angle\": 0,\n        \"prefab_id\": 1\n    },\n    return game_api.send(data)\n",
     "code_description": "This code defines a function called Create_Building that constructs a specified building at the designated location and orientation."
   },
   {
     "name": "Get_Camera_Position",
-    "code": "def Get_Camera_Position(action) -> tuple[str, float]:\n    \n    \"\"\"\n    Get the current position coordinates (x, y, z) of the camera, unit: meters\n\n    Parameters:\n- action: string, \"Get_Camera_Position\"\n   Return:\n- status: string, \"ok\" or \"error\"        - message: string, succeed: \"success\"; failed: error message        - pos_x: float, camera's x coordinate        - pos_y: float, ~        - pos_z: float, ~\n    \"\"\"\n    data = {\n        \"action\": \"Get_Camera_Position\"\n    }\n    game_api.send(data)\n",
+    "code": "def Get_Camera_Position(action) -> tuple[str, float]:\n    \n    \"\"\"\n    Get the current position coordinates (x, y, z) of the camera, unit: meters\n\n    Parameters:\n- action: string, \"Get_Camera_Position\"\n   Return:\n- status: string, \"ok\" or \"error\"        - message: string, succeed: \"success\"; failed: error message        - pos_x: float, camera's x coordinate        - pos_y: float, ~        - pos_z: float, ~\n    \"\"\"\n    data = {\n        \"action\": \"Get_Camera_Position\"\n    },\n    return game_api.send(data)\n",
     "code_description": "This code defines a function called Get_Camera_Position that gets the current position coordinates (x, y, z) of the camera."
   },
   {
     "name": "Get_Camera_Rotation",
-    "code": "def Get_Camera_Rotation(action) -> tuple[str, float]:\n    \n    \"\"\"\n    Get the camera's orientation (horizontal and pitch angles), angle in degrees\n\n    Parameters:\n- action: string, \"Get_Camera_Rotation\"\n   Return:\n- status: string, \"ok\" or \"error\"        -message: string, succeed: \"success\"; failed: error message        - rot_yaw: float, horizontal angle        - rot_pitch: float, pitch angle\n    \"\"\"\n    data = {\n        \"action\": \"Get_Camera_Rotation\"\n    }\n    game_api.send(data)\n",
+    "code": "def Get_Camera_Rotation(action) -> tuple[str, float]:\n    \n    \"\"\"\n    Get the camera's orientation (horizontal and pitch angles), angle in degrees\n\n    Parameters:\n- action: string, \"Get_Camera_Rotation\"\n   Return:\n- status: string, \"ok\" or \"error\"        -message: string, succeed: \"success\"; failed: error message        - rot_yaw: float, horizontal angle        - rot_pitch: float, pitch angle\n    \"\"\"\n    data = {\n        \"action\": \"Get_Camera_Rotation\"\n    },\n    return game_api.send(data)\n",
     "code_description": "This code defines a function called Get_Camera_Rotation that gets the camera's orientation (horizontal and pitch angles)."
   },
   {
     "name": "Move_Camera",
-    "code": "def Move_Camera(action, pos_x, pos_y, pos_z, relative_to_camera) -> tuple[str]:\n    \n    \"\"\"\n    Specify a vector (x, y, z) to move the camera by, in world coordinates or local coordinates (determined by the camera's orientation)\n\n    Parameters:\n- action: string, \"Move_Camera\"\n        - pos_x: float, movement vector's x coordinate        - pos_y: float, ~        - pos_z: float, ~        - relative_to_camera: bool, true: move based on the camera's local coordinate system; false: move based on the world coordinate system\n   Return:\n- status: string, \"ok\" or \"error\"        - message: string, succeed: \"success\"; failed: error message\n    \"\"\"\n    data = {\n        \"action\": \"Move_Camera\",\n        \"pos_x\": 0,\n        \"pos_y\": 0,\n        \"pos_z\": 0,\n        \"relative_to_camera\": true\n    }\n    game_api.send(data)\n",
+    "code": "def Move_Camera(action, pos_x, pos_y, pos_z, relative_to_camera) -> tuple[str]:\n    \n    \"\"\"\n    Specify a vector (x, y, z) to move the camera by, in world coordinates or local coordinates (determined by the camera's orientation)\n\n    Parameters:\n- action: string, \"Move_Camera\"\n        - pos_x: float, movement vector's x coordinate        - pos_y: float, ~        - pos_z: float, ~        - relative_to_camera: bool, true: move based on the camera's local coordinate system; false: move based on the world coordinate system\n   Return:\n- status: string, \"ok\" or \"error\"        - message: string, succeed: \"success\"; failed: error message\n    \"\"\"\n    data = {\n        \"action\": \"Move_Camera\",\n        \"pos_x\": 0,\n        \"pos_y\": 0,\n        \"pos_z\": 0,\n        \"relative_to_camera\": true\n    },\n    return game_api.send(data)\n",
     "code_description": "This code defines a function called Move_Camera that specifies a vector (x, y, z) to move the camera by, in world coordinates or local coordinates."
   },
   {
     "name": "Rotate_Camera",
-    "code": "def Rotate_Camera(action, rot_yaw, rot_pitch) -> tuple[str]:\n    \n    \"\"\"\n    Specify horizontal and pitch rotation angles (in degrees) to rotate the camera\n\n    Parameters:\n- action: string, \"Rotate_Camera\"\n        - rot_yaw: float, horizontal rotation angle        - rot_pitch: float, pitch rotation angle\n   Return:\n- status: string, \"ok\" or \"error\"        - message: string, succeed: \"success\"; failed: error message\n    \"\"\"\n    data = {\n        \"action\": \"Rotate_Camera\",\n        \"rot_yaw\": 0,\n        \"rot_pitch\": 0\n    }\n    game_api.send(data)\n",
+    "code": "def Rotate_Camera(action, rot_yaw, rot_pitch) -> tuple[str]:\n    \n    \"\"\"\n    Specify horizontal and pitch rotation angles (in degrees) to rotate the camera\n\n    Parameters:\n- action: string, \"Rotate_Camera\"\n        - rot_yaw: float, horizontal rotation angle        - rot_pitch: float, pitch rotation angle\n   Return:\n- status: string, \"ok\" or \"error\"        - message: string, succeed: \"success\"; failed: error message\n    \"\"\"\n    data = {\n        \"action\": \"Rotate_Camera\",\n        \"rot_yaw\": 0,\n        \"rot_pitch\": 0\n    },\n    return game_api.send(data)\n",
     "code_description": "This code defines a function called Rotate_Camera that specifies horizontal and pitch rotation angles (in degrees) to rotate the camera."
   },
   {
     "name": "Set_Camera_Position",
-    "code": "def Set_Camera_Position(action, pos_x, pos_y, pos_z) -> tuple[str]:\n    \n    \"\"\"\n    Specify a coordinate (x, y, z) in world coordinates to move the camera to the specific location\n\n    Parameters:\n- action: string, \"Set_Camera_Position\"\n        - pos_x: float, target position x coordinate        - pos_y: float, ~        - pos_z: float, ~\n   Return:\n- status: string, \"ok\" or \"error\"        - message: string, succeed: \"success\"; failed: error message\n    \"\"\"\n    data = {\n        \"action\": \"Set_Camera_Position\",\n        \"pos_x\": 0,\n        \"pos_y\": 0,\n        \"pos_z\": 0\n    }\n    game_api.send(data)\n",
+    "code": "def Set_Camera_Position(action, pos_x, pos_y, pos_z) -> tuple[str]:\n    \n    \"\"\"\n    Specify a coordinate (x, y, z) in world coordinates to move the camera to the specific location\n\n    Parameters:\n- action: string, \"Set_Camera_Position\"\n        - pos_x: float, target position x coordinate        - pos_y: float, ~        - pos_z: float, ~\n   Return:\n- status: string, \"ok\" or \"error\"        - message: string, succeed: \"success\"; failed: error message\n    \"\"\"\n    data = {\n        \"action\": \"Set_Camera_Position\",\n        \"pos_x\": 0,\n        \"pos_y\": 0,\n        \"pos_z\": 0\n    },\n    return game_api.send(data)\n",
     "code_description": "This code defines a function called Set_Camera_Position that specifies a coordinate (x, y, z) in world coordinates to move the camera to the specific location."
   },
   {
     "name": "Set_Camera_Rotation",
-    "code": "def Set_Camera_Rotation(action, rot_yaw, rot_pitch) -> tuple[str]:\n    \n    \"\"\"\n    Specify horizontal and pitch angles (in world coordinates) to rotate the camera to the specific orientation\n\n    Parameters:\n- action: string, \"Set_Camera_Rotation\"\n        - rot_yaw: float, horizontal angle        - rot_pitch: float, pitch angle\n   Return:\n- status: string, \"ok\" or \"error\"        - message: string, succeed: \"success\"; failed: error message\n    \"\"\"\n    data = {\n        \"action\": \"Set_Camera_Rotation\",\n        \"rot_yaw\": 0,\n        \"rot_pitch\": 0\n    }\n    game_api.send(data)\n",
+    "code": "def Set_Camera_Rotation(action, rot_yaw, rot_pitch) -> tuple[str]:\n    \n    \"\"\"\n    Specify horizontal and pitch angles (in world coordinates) to rotate the camera to the specific orientation\n\n    Parameters:\n- action: string, \"Set_Camera_Rotation\"\n        - rot_yaw: float, horizontal angle        - rot_pitch: float, pitch angle\n   Return:\n- status: string, \"ok\" or \"error\"        - message: string, succeed: \"success\"; failed: error message\n    \"\"\"\n    data = {\n        \"action\": \"Set_Camera_Rotation\",\n        \"rot_yaw\": 0,\n        \"rot_pitch\": 0\n    },\n    return game_api.send(data)\n",
     "code_description": "This code defines a function called Set_Camera_Rotation that specifies horizontal and pitch angles (in world coordinates) to rotate the camera to the specific orientation."
   },
   {
     "name": "Get_Screen_Shot",
-    "code": "def Get_Screen_Shot(action) -> tuple[str]:\n    \n    \"\"\"\n    Capture a complete screenshot of the game, including the scenery and UI\n\n    Parameters:\n- action: string, \"Get_Screen_Shot\"\n   Return:\n- status: string, \"ok\" or \"error\"        - message: string, succeed: \"success\"; failed: error message        - screen_shot_base64: string, base64 encoding of a png image\n    \"\"\"\n    data = {\n        \"action\": \"Get_Screen_Shot\"\n    }\n    game_api.send(data)\n",
+    "code": "def Get_Screen_Shot(action) -> tuple[str]:\n    \n    \"\"\"\n    Capture a complete screenshot of the game, including the scenery and UI\n\n    Parameters:\n- action: string, \"Get_Screen_Shot\"\n   Return:\n- status: string, \"ok\" or \"error\"        - message: string, succeed: \"success\"; failed: error message        - screen_shot_base64: string, base64 encoding of a png image\n    \"\"\"\n    data = {\n        \"action\": \"Get_Screen_Shot\"\n    },\n    return game_api.send(data)\n",
     "code_description": "This code defines a function called Get_Screen_Shot that captures a complete screenshot of the game, including the scenery and UI."
   },
   {
     "name": "Select_Zone",
-    "code": "def Select_Zone(action, start_pos_x, start_pos_z, end_pos_x, end_pos_z, zone_type) -> tuple[str]:\n    \"\"\"\n    Specify the zone type and diagonal coordinate of the rectangle, and set the zone type of the selected area\n        action: string, \"Select_Zone\"\n        start_pos_x: float, x coordinate of the starting point of the rectangle\n        start_pos_z: float, ~\n        end_pos_x: float, ~\n        end_pos_z: float, ~\n        zone_type: int, zone type to be set, 0: unzoned, 1: distant, 2: residential low, 3: residential high, 4: commercial low, 5: commercial high, 6: industrial, 7: office\n    Return:\n        status: string, \"ok\" or \"error\"\n        message: string, succeed: \"success\"; failed: error message\n    \"\"\"\n\n    data = {\n        \"action\": \"Select_Zone\",\n        \"start_pos_x\": 0,\n        \"start_pos_z\": 0,\n        \"end_pos_x\": 100,\n        \"end_pos_z\": 100,\n        \"zone_type\": 2\n    }\n\n    game_api.send(data)",
+    "code": "def Select_Zone(action, start_pos_x, start_pos_z, end_pos_x, end_pos_z, zone_type) -> tuple[str]:\n    \"\"\"\n    Specify the zone type and diagonal coordinate of the rectangle, and set the zone type of the selected area\n        action: string, \"Select_Zone\"\n        start_pos_x: float, x coordinate of the starting point of the rectangle\n        start_pos_z: float, ~\n        end_pos_x: float, ~\n        end_pos_z: float, ~\n        zone_type: int, zone type to be set, 0: unzoned, 1: distant, 2: residential low, 3: residential high, 4: commercial low, 5: commercial high, 6: industrial, 7: office\n    Return:\n        status: string, \"ok\" or \"error\"\n        message: string, succeed: \"success\"; failed: error message\n    \"\"\"\n\n    data = {\n        \"action\": \"Select_Zone\",\n        \"start_pos_x\": 0,\n        \"start_pos_z\": 0,\n        \"end_pos_x\": 100,\n        \"end_pos_z\": 100,\n        \"zone_type\": 2\n    },\n\n    return game_api.send(data)",
     "code_description": "This code defines a function called Select_Zone that specifies the zone type and diagonal coordinate of the rectangle, and sets the zone type of the selected area."
   },
   {
     "name": "Set_Pausing",
-    "code": "def Set_Pausing(action, pausing) -> tuple[str]:\n    \"\"\"\n    Pause or resume the game\n        action: string, \"Set_Pausing\"\n        pausing: bool, true: pause the game; false: resume the game\n    Return:\n        status: string, \"ok\" or \"error\"\n        message: string, succeed: \"success\"; failed: error message\n    \"\"\"\n\n    data = {\n        \"action\": \"Set_Pausing\",\n        \"pausing\": True\n    }\n\n    game_api.send(data)",
+    "code": "def Set_Pausing(action, pausing) -> tuple[str]:\n    \"\"\"\n    Pause or resume the game\n        action: string, \"Set_Pausing\"\n        pausing: bool, true: pause the game; false: resume the game\n    Return:\n        status: string, \"ok\" or \"error\"\n        message: string, succeed: \"success\"; failed: error message\n    \"\"\"\n\n    data = {\n        \"action\": \"Set_Pausing\",\n        \"pausing\": True\n    },\n\n    return game_api.send(data)",
     "code_description": "This code defines a function called Set_Pausing that pauses or resumes the game."
-  }
+  },
+  {
+  "name": "Get_Population_Info",
+  "code": "def Get_Population_Info() -> tuple[str, dict]:\n    \"\"\"\n    获取人口信息\n    \n    Return:\n    - status: string, \"ok\" or \"error\"\n    - message: string, succeed: \"success\"; failed: error message\n    - population_info: dict, information about population\n    \"\"\"\n    data = {\n        \"action\": \"Get_Population_Info\"\n    },\n    return game_api.send(data)\n",
+  "code_description": "This code defines a function called Get_Population_Info that retrieves population information."
+},
+
+{
+  "name": "Get_Education_Info",
+  "code": "def Get_Education_Info() -> tuple[str, dict]:\n    \"\"\"\n    获取教育信息\n    \n    Return:\n    - status: string, \"ok\" or \"error\"\n    - message: string, succeed: \"success\"; failed: error message\n    - education_info: dict, information about education\n    \"\"\"\n    data = {\n        \"action\": \"Get_Education_Info\"\n    },\n    return game_api.send(data)\n",
+  "code_description": "This code defines a function called Get_Education_Info that retrieves education information."
+},
+
+{
+  "name": "Get_Happiness_Info",
+  "code": "def Get_Happiness_Info() -> tuple[str, dict]:\n    \"\"\"\n    获取幸福度信息\n    \n    Return:\n    - status: string, \"ok\" or \"error\"\n    - message: string, succeed: \"success\"; failed: error message\n    - happiness_info: dict, information about happiness levels\n    \"\"\"\n    data = {\n        \"action\": \"Get_Happiness_Info\"\n    },\n    return game_api.send(data)\n",
+  "code_description": "This code defines a function called Get_Happiness_Info that retrieves information about happiness levels."
+},
+
+{
+  "name": "Get_Economy_Info",
+  "code": "def Get_Economy_Info(action_type: str) -> tuple[str, dict]:\n    \"\"\"\n    获取经济信息\n    \n    Parameters:\n    - action_type: string, \"overview\", \"income\", \"expense\", \"budget\"\n    \n    Return:\n    - status: string, \"ok\" or \"error\"\n    - message: string, succeed: \"success\"; failed: error message\n    - economy_info: dict, information about the economy\n    \"\"\"\n    data = {\n        \"action\": \"Get_Economy_Info\",\n        \"type\": action_type\n    },\n    return game_api.send(data)\n",
+  "code_description": "This code defines a function called Get_Economy_Info that retrieves economic information based on the specified type."
+},
+
+{
+  "name": "Get_UnConnected_Road",
+  "code": "def Get_UnConnected_Road() -> tuple[str, list]:\n    \"\"\"\n    获取未连接的道路信息\n    \n    Return:\n    - status: string, \"ok\" or \"error\"\n    - message: string, succeed: \"success\"; failed: error message\n    - unconnected_roads: list, list of unconnected roads\n    \"\"\"\n    data = {\n        \"action\": \"Get_UnConnected_Road\"\n    },\n    return game_api.send(data)\n",
+  "code_description": "This code defines a function called Get_UnConnected_Road that retrieves information about unconnected roads."
+},
+
+{
+  "name": "Get_TrafficDensity_Info",
+  "code": "def Get_TrafficDensity_Info() -> tuple[str, dict]:\n    \"\"\"\n    获取所有道路的流量信息\n    \n    Return:\n    - status: string, \"ok\" or \"error\"\n    - message: string, succeed: \"success\"; failed: error message\n    - traffic_density_info: dict, information about traffic density\n    \"\"\"\n    data = {\n        \"action\": \"Get_TrafficDensity_Info\"\n    },\n    return game_api.send(data)\n",
+  "code_description": "This code defines a function called Get_TrafficDensity_Info that retrieves information about the traffic density of all roads."
+},
+
+{
+  "name": "Get_RoadNode_Info",
+  "code": "def Get_RoadNode_Info(node_id: int) -> tuple[str, dict]:\n    \"\"\"\n    获取道路节点的信息，包括起点和终点的坐标\n    \n    Parameters:\n    - node_id: int, ID of the road node\n    \n    Return:\n    - status: string, \"ok\" or \"error\"\n    - message: string, succeed: \"success\"; failed: error message\n    - road_info: dict, information about the road nodes\n    \"\"\"\n    data = {\n        \"action\": \"Get_RoadNode_Info\",\n        \"node_id\": node_id\n    },\n    return game_api.send(data)\n",
+  "code_description": "This code defines a function called Get_RoadNode_Info that retrieves information about a road node including its start and end coordinates."
+},
+
+{
+  "name": "Get_PublicTransport_Info",
+  "code": "def Get_PublicTransport_Info() -> tuple[str, dict]:\n    \"\"\"\n    获取公共交通信息\n    \n    Return:\n    - status: string, \"ok\" or \"error\"\n    - message: string, succeed: \"success\"; failed: error message\n    - public_transport_info: dict, information about public transport\n    \"\"\"\n    data = {\n        \"action\": \"Get_PublicTransport_Info\"\n    },\n    return game_api.send(data)\n",
+  "code_description": "This code defines a function called Get_PublicTransport_Info that retrieves information about public transport."
+},
+
+{
+  "name": "Get_Pollution_Info",
+  "code": "def Get_Pollution_Info() -> tuple[str, dict]:\n    \"\"\"\n    获取污染信息\n    \n    Return:\n    - status: string, \"ok\" or \"error\"\n    - message: string, succeed: \"success\"; failed: error message\n    - pollution_info: dict, information about pollution levels\n    \"\"\"\n    data = {\n        \"action\": \"Get_Pollution_Info\"\n    },\n    return game_api.send(data)\n",
+  "code_description": "This code defines a function called Get_Pollution_Info that retrieves information about pollution levels."
+},
+
+{
+  "name": "Get_Sewage_Info",
+  "code": "def Get_Sewage_Info() -> tuple[str, dict]:\n    \"\"\"\n    获取污水处理信息\n    \n    Return:\n    - status: string, \"ok\" or \"error\"\n    - message: string, succeed: \"success\"; failed: error message\n    - sewage_info: dict, information about sewage processing\n    \"\"\"\n    data = {\n        \"action\": \"Get_Sewage_Info\"\n    },\n    return game_api.send(data)\n",
+  "code_description": "This code defines a function called Get_Sewage_Info that retrieves information about sewage processing."
+},
+
+{
+  "name": "Get_Garbage_Info",
+  "code": "def Get_Garbage_Info() -> tuple[str, dict]:\n    \"\"\"\n    获取垃圾处理信息\n    \n    Return:\n    - status: string, \"ok\" or \"error\"\n    - message: string, succeed: \"success\"; failed: error message\n    - garbage_info: dict, information about garbage processing\n    \"\"\"\n    data = {\n        \"action\": \"Get_Garbage_Info\"\n    },\n    return game_api.send(data)\n",
+  "code_description": "This code defines a function called Get_Garbage_Info that retrieves information about garbage processing."
+},
+
+{
+  "name": "Get_Zone_Info",
+  "code": "def Get_Zone_Info() -> tuple[str, dict]:\n    \"\"\"\n    获取区域的信息，包括商业区、工业区和住宅区的坐标与建筑类型\n    \n    Return:\n    - status: string, \"ok\" or \"error\"\n    - message: string, succeed: \"success\"; failed: error message\n    - zone_info: dict, information about different zones\n    \"\"\"\n    data = {\n        \"action\": \"Get_Zone_Info\"\n    },\n    return game_api.send(data)\n",
+  "code_description": "This code defines a function called Get_Zone_Info that retrieves information about different zones including coordinates and building types."
+},
+
+{
+  "name": "Get_Electricity_Notification",
+  "code": "def Get_Electricity_Notification() -> tuple[str, dict]:\n    \"\"\"\n    获取缺电建筑的坐标\n    \n    Return:\n    - status: string, \"ok\" or \"error\"\n    - message: string, succeed: \"success\"; failed: error message\n    - coordinates: dict, dictionary with building id as key and coordinates as value\n    \"\"\"\n    data = {\n        \"action\": \"Get_Electricity_Notification\"\n    },\n    return game_api.send(data)\n",
+  "code_description": "This code defines a function called Get_Electricity_Notification that retrieves coordinates of buildings with electricity shortage."
+},
+
+{
+  "name": "Get_Water_Notification",
+  "code": "def Get_Water_Notification() -> tuple[str, dict]:\n    \"\"\"\n    获取缺水建筑的坐标\n    \n    Return:\n    - status: string, \"ok\" or \"error\"\n    - message: string, succeed: \"success\"; failed: error message\n    - coordinates: dict, dictionary with building id as key and coordinates as value\n    \"\"\"\n    data = {\n        \"action\": \"Get_Water_Notification\"\n    },\n    return game_api.send(data)\n",
+  "code_description": "This code defines a function called Get_Water_Notification that retrieves coordinates of buildings with water shortage."
+}
 ]

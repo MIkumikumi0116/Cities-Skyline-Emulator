@@ -1,0 +1,136 @@
+{
+  "tasks": [
+    {
+      "task_name": "建设城市公园",
+      "high_level_goal": "公园应位于住宅区和商业区之间，以便居民休闲。",
+      "low_level_instructions": [
+        {
+          "instruction": "使用API查找住宅区和商业区坐标（GPS定位）。",
+          "required_api": "Get_Zone_Coordinates",
+          "example_request": [
+            {
+              "action": "Get_Zone_Coordinates",
+              "zone_type": 2  // 住宅低密度
+            },
+            {
+              "action": "Get_Zone_Coordinates",
+              "zone_type": 4  // 商业低密度
+            }
+          ]
+        },
+        {
+          "instruction": "使用API在住宅区和商业区之间找到一块空地坐标。",
+          "required_api": "Find_Empty_Land",
+          "example_request": {
+            "action": "Find_Empty_Land",
+            "start_x": 100.0,
+            "start_z": 200.0,
+            "end_x": 150.0,
+            "end_z": 250.0,
+            "min_area": 1000  // 最小面积要求
+          }
+        },
+        {
+          "instruction": "使用API确定公园的边界，并确保空地面积满足最小要求。",
+          "required_api": [
+            "Check_Land_Area",
+            "Define_Land_Boundary"
+          ],
+          "example_request": [
+            {
+              "action": "Check_Land_Area",
+              "start_x": 110.0,
+              "start_z": 210.0,
+              "end_x": 140.0,
+              "end_z": 240.0,
+              "min_area": 1000  // 最小面积要求
+            },
+            {
+              "action": "Define_Land_Boundary",
+              "boundary": [
+                {"x": 110.0, "z": 210.0},
+                {"x": 140.0, "z": 210.0},
+                {"x": 140.0, "z": 240.0},
+                {"x": 110.0, "z": 240.0}
+              ]
+            }
+          ]
+        },
+        {
+          "instruction": "使用建筑API在空地上放置公园。",
+          "required_api": "Create_Building",
+          "example_request": {
+            "action": "Create_Building",
+            "pos_x": 125.0,
+            "pos_z": 225.0,
+            "angle": 0.0,
+            "prefab_id": 300  // 公园的Prefab ID
+          }
+        }
+      ]
+    },
+    {
+      "task_name": "建设新医院",
+      "high_level_goal": "在居民区附近建设一座医院以方便居民就医。",
+      "low_level_instructions": [
+        {
+          "instruction": "使用API查找住宅区坐标（GPS定位）。",
+          "required_api": "Get_Zone_Coordinates",
+          "example_request": {
+            "action": "Get_Zone_Coordinates",
+            "zone_type": 2  // 住宅低密度
+          }
+        },
+        {
+          "instruction": "使用API在住宅区附近找到一块空地坐标。",
+          "required_api": "Find_Empty_Land",
+          "example_request": {
+            "action": "Find_Empty_Land",
+            "start_x": 100.0,
+            "start_z": 200.0,
+            "end_x": 150.0,
+            "end_z": 250.0,
+            "min_area": 5000  // 最小面积要求
+          }
+        },
+        {
+          "instruction": "使用API确定医院的边界，并确保空地面积满足最小要求。",
+          "required_api": [
+            "Check_Land_Area",
+            "Define_Land_Boundary"
+          ],
+          "example_request": [
+            {
+              "action": "Check_Land_Area",
+              "start_x": 110.0,
+              "start_z": 210.0,
+              "end_x": 140.0,
+              "end_z": 240.0,
+              "min_area": 5000  // 最小面积要求
+            },
+            {
+              "action": "Define_Land_Boundary",
+              "boundary": [
+                {"x": 110.0, "z": 210.0},
+                {"x": 140.0, "z": 210.0},
+                {"x": 140.0, "z": 240.0},
+                {"x": 110.0, "z": 240.0}
+              ]
+            }
+          ]
+        },
+        {
+          "instruction": "使用建筑API在空地上放置医院。",
+          "required_api": "Create_Building",
+          "example_request": {
+            "action": "Create_Building",
+            "pos_x": 125.0,
+            "pos_z": 225.0,
+            "angle": 0.0,
+            "prefab_id": 1  // 医院的Prefab ID
+          }
+        }
+      ]
+    }
+  ]
+}

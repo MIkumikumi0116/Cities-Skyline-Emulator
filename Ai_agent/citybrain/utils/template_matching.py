@@ -68,6 +68,7 @@ def match_template_image(src_file: str, template_file: str, debug = False, outpu
     '''
 
     output_dir = config.work_dir
+    # output_dir = r'D:\Users\10424\Desktop\Notifications'
     tid = time.time()
 
     scales = scale

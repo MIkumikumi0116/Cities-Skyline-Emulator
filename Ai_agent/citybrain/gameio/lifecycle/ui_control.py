@@ -23,6 +23,9 @@ config = Config()
 logger = Logger()
 io_env = IOEnvironment()
 
+
+
+
 PAUSE_SCREEN_WAIT = 1
 
 
@@ -97,7 +100,7 @@ def switch_to_game():
 def take_screenshot(tid : float = 0.0,
                     screen_region : tuple[int, int, int, int] = config.game_region,
                     minimap_region : tuple[int, int, int, int] = config.minimap_region,
-                    include_minimap = True,
+                    include_minimap = False,
                     draw_axis = False):
 
     region = screen_region
